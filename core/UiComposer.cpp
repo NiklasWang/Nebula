@@ -2,7 +2,7 @@
 #include <QMessageBox>
 
 #include "utils/common.h"
-#include "UiComposer.h"
+#include "core/UiComposer.h"
 
 namespace nebula {
 

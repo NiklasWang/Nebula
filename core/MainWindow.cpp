@@ -1,7 +1,7 @@
 #include "QMessageBox"
 
 #include "utils/common.h"
-#include "MainWindow.h"
+#include "core/MainWindow.h"
 
 namespace nebula {
 

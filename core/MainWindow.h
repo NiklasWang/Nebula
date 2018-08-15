@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "UiComposer.h"
+#include "core/UiComposer.h"
 
 namespace nebula {
 
@@ -21,4 +21,4 @@ private:
 
 }
 
-#endif // MAINWINDOW_H
+#endif

@@ -24,17 +24,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    main.cpp \
     utils/CQueue.cpp \
     utils/Semaphore.cpp \
     utils/SyncType.cpp \
     ui/DefaultUi.cpp \
     ui/MainWindowUi.cpp \
     ui/DeviceUi.cpp \
-    UiComposer.cpp \
-    MainWindow.cpp \
-	main.cpp
+    core/UiComposer.cpp \
+    core/MainWindow.cpp
 
 HEADERS += \
+    version.h \
     ui/UiLayout.h \
     ui/DefaultUi.h \
     ui/MainWindowUi.h \
@@ -46,9 +47,8 @@ HEADERS += \
     utils/Semaphore.h \
     utils/SyncType.h \
     utils/TimeEx.h \
-    MainWindow.h \
-    UiComposer.h \
-    version.h
+    core/MainWindow.h \
+    core/UiComposer.h
 
 FORMS += \
     ui/MainWindow.ui
