@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="FailedIcon">FailedIcon_e25b68.png</file>
+        <file alias="QuestionIcon">QuestionIcon_ffc000.png</file>
+        <file alias="SucceedIcon">SucceedIcon_3dbb93.png</file>
+    </qresource>
+</RCC>

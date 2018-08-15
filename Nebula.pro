@@ -55,3 +55,6 @@ HEADERS += \
 FORMS += \
     ui/MainWindow.ui \
     ui/Device.ui
+
+RESOURCES += \
+    resource/Pictures.qrc
