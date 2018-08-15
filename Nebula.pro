@@ -32,7 +32,8 @@ SOURCES += \
     ui/MainWindowUi.cpp \
     ui/DeviceUi.cpp \
     core/UiComposer.cpp \
-    core/MainWindow.cpp
+    core/MainWindow.cpp \
+    core/DeviceMonitor.cpp
 
 HEADERS += \
     version.h \
@@ -48,7 +49,8 @@ HEADERS += \
     utils/SyncType.h \
     utils/TimeEx.h \
     core/MainWindow.h \
-    core/UiComposer.h
+    core/UiComposer.h \
+    core/DeviceMonitor.h
 
 FORMS += \
     ui/MainWindow.ui \

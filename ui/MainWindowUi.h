@@ -21,7 +21,7 @@ public:
     QSize getSize();
 
 public:
-    MainWindowUi(QMainWindow *window);
+    explicit MainWindowUi(QMainWindow *window);
     ~MainWindowUi();
 
 private:

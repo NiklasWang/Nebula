@@ -17,7 +17,7 @@ public:
     int32_t onDeviceRemoved(QString &name);
 
 public:
-    UiComposer(QMainWindow *window);
+    explicit UiComposer(QMainWindow *window);
     ~UiComposer();
     int32_t construct();
     int32_t destruct();

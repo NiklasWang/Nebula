@@ -21,7 +21,7 @@ public:
     QSize getSize();
 
 public:
-    DeviceUi(QMainWindow *window, QString &name, int32_t id);
+    explicit DeviceUi(QMainWindow *window, QString &name, int32_t id);
     ~DeviceUi();
 
 private:

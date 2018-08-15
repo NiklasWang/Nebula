@@ -7,8 +7,6 @@
 
 #include "version.h"
 
-namespace nebula {
-
 enum err_raeson {
     NO_ERROR = 0,
     PERM_DENIED,
@@ -113,6 +111,8 @@ enum err_raeson {
 #define align_len_to_size(len, size) ({                    \
         (((len) + (size) - 1) & ~((size) - 1)); });
 
+namespace nebula {
+
 class noncopyable {
 protected:
     noncopyable() {}
@@ -133,6 +133,6 @@ struct AnyType {
     AnyType &operator=(const T &) { return *this; }
 };
 
-};
+}
 
 #endif
