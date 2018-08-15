@@ -16,8 +16,8 @@ UiComposer::UiComposer(QMainWindow *window) :
 
 UiComposer::~UiComposer()
 {
-    if (NOTNULL(mDefaultUi)) {
-        SECURE_DELETE(mDefaultUi);
+    if (mConstructed) {
+        destruct();
     }
 }
 

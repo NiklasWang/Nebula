@@ -27,22 +27,20 @@ DeviceUi::DeviceUi(QMainWindow *window, QString &name, int32_t id) :
 
 DeviceUi::~DeviceUi()
 {
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
-    SECURE_DELETE();
+    SECURE_DELETE(mDebugEditor);
+    SECURE_DELETE(mResultLabel);
+    SECURE_DELETE(mPictureLabel3);
+    SECURE_DELETE(mTextLabel3);
+    SECURE_DELETE(mPictureLabel2);
+    SECURE_DELETE(mTextLabel2);
+    SECURE_DELETE(mPictureLabel1);
+    SECURE_DELETE(mTextLabel1);
+    SECURE_DELETE(mPictureLabel0);
+    SECURE_DELETE(mTextLabel0);
+    SECURE_DELETE(mGridLayout);
+    SECURE_DELETE(mGridLayoutWidget);
+    SECURE_DELETE(mGroupBox);
+    SECURE_DELETE(mCentralWidget);
 }
 
 int32_t DeviceUi::setupUi()

@@ -17,10 +17,16 @@ DefaultUi::DefaultUi(QMainWindow *window) :
     mDataPathLabel(nullptr),
     mDataPathEdit(nullptr),
     mSelectButton(nullptr)
-{}
+{
+}
 
 DefaultUi::~DefaultUi()
 {
+    SECURE_DELETE(mDefaultLabel);
+    SECURE_DELETE(mDataPathLabel);
+    SECURE_DELETE(mDataPathEdit);
+    SECURE_DELETE(mSelectButton);
+    SECURE_DELETE(mCentralWidget);
 }
 
 int32_t DefaultUi::setupUi()
