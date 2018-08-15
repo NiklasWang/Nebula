@@ -51,4 +51,5 @@ HEADERS += \
     core/UiComposer.h
 
 FORMS += \
-    ui/MainWindow.ui
+    ui/MainWindow.ui \
+    ui/Device.ui
