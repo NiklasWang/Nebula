@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 
-namespace Ui {
-class MainWindow;
-}
+#include "UiComposer.h"
+
+namespace nebula {
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +16,9 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    nebula::UiComposer *mUi;
 };
+
+}
 
 #endif // MAINWINDOW_H

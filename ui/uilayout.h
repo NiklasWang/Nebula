@@ -1,0 +1,8 @@
+#ifndef UILAYOUT_H
+#define UILAYOUT_H
+
+#define DEFAULT_UI_WIDTH  560
+#define DEFAULT_UI_HEIGHT 210
+#define DEFAULT_UI_MENU_HEIGHT 21
+
+#endif
