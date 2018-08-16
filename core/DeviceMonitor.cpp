@@ -1,4 +1,3 @@
-#include <QMessageBox>
 #include <QProcess>
 
 #include "utils/common.h"
@@ -21,8 +20,7 @@ DeviceMonitor::~DeviceMonitor()
     if (isRunning()) {
         int32_t rc = exitMonitor();
         if (!SUCCEED(rc)) {
-            QMessageBox::warning(gMW, NULL,
-                "Failed to exit device monitor.");
+            showError("Failed to exit device monitor.");
         }
     }
     quit();
@@ -41,8 +39,7 @@ int32_t DeviceMonitor::startMonitor()
     if (!isRunning()) {
         start();
     } else {
-        QMessageBox::warning(gMW, NULL,
-            "Device monitor already started.");
+        showError("Device monitor already started.");
     }
 
     return rc;
@@ -71,8 +68,7 @@ int32_t DeviceMonitor::doTaskLoop()
 
         int32_t rc = doTask();
         if (!SUCCEED(rc)) {
-            QMessageBox::warning(gMW, NULL,
-                "Failed to do task in thread loop.");
+            showError("Failed to do task in thread loop.");
             final |= rc;
         }
     } while (!mExit);
@@ -94,8 +90,7 @@ int32_t DeviceMonitor::doTask()
 
     rc = checkDevices(output);
     if (SUCCEED(rc)) {
-        QMessageBox::warning(gMW, NULL,
-            "Failed to check device.\n" + output);
+        showError("Failed to check device.\n" + output);
     }
 
     return rc;
@@ -116,9 +111,11 @@ int32_t DeviceMonitor::checkDevices(QString &output)
     if (SUCCEED(rc)) {
         QStringList lines = output.split("\n");
         foreach (QString line, lines) {
-            if (!line.contains(ADB_DEVICE_IGNORE, Qt::CaseSensitive) &&
+            if (!line.contains(ADB_DEVICE_IGNORE1, Qt::CaseSensitive) &&
+                !line.contains(ADB_DEVICE_IGNORE2, Qt::CaseSensitive) &&
                 !line.contains(ADB_DEVICE_PREFIX, Qt::CaseSensitive)) {
-                QStringList words = line.split(" ");
+                QStringList words = line.split(
+                    QRegExp("[ \t\r]"), QString::SkipEmptyParts);
                 if (words.size()) {
                     adbDevices.append(words.at(0));
                 }
@@ -131,8 +128,7 @@ int32_t DeviceMonitor::checkDevices(QString &output)
             if (!adbDevices.contains(device)) {
                 rc = removeDevice(device);
                 if (!SUCCEED(rc)) {
-                    QMessageBox::warning(gMW, NULL,
-                        "Failed to remove device " + device);
+                    showError("Failed to remove device " + device);
                 }
             }
         }
@@ -143,8 +139,7 @@ int32_t DeviceMonitor::checkDevices(QString &output)
             if (!curDevices.contains(device)) {
                 rc = addDevice(device);
                 if (!SUCCEED(rc)) {
-                    QMessageBox::warning(gMW, NULL,
-                        "Failed to add new device " + device);
+                    showError("Failed to add new device " + device);
                 }
             }
         }
@@ -161,16 +156,14 @@ int32_t DeviceMonitor::addDevice(QString &name)
     if (SUCCEED(rc)) {
         device = new DeviceControl(name);
         if (ISNULL(device)) {
-            QMessageBox::warning(gMW, NULL,
-                "Failed to create device " + name);
+            showError("Failed to create device " + name);
         }
     }
 
     if (SUCCEED(rc)) {
         rc = device->construct();
         if (!SUCCEED(rc)) {
-            QMessageBox::warning(gMW, NULL,
-                "Failed to construct device " + name);
+            showError("Failed to construct device " + name);
         } else {
             mDevices.push_back(device);
         }
@@ -179,8 +172,7 @@ int32_t DeviceMonitor::addDevice(QString &name)
     if (SUCCEED(rc)) {
         rc = mUi->onDeviceAttached(name);
         if (!SUCCEED(rc)) {
-            QMessageBox::warning(gMW, NULL,
-                "Failed to draw device " + name + " ui.");
+            showError("Failed to draw device " + name + " ui.");
         }
     }
 
@@ -206,8 +198,7 @@ int32_t DeviceMonitor::removeDevice(QString &name)
     if (SUCCEED(rc)) {
         rc = device->destruct();
         if (!SUCCEED(rc)) {
-            QMessageBox::warning(gMW, NULL,
-                "Failed to destruct device " + name);
+            showError("Failed to destruct device " + name);
         }
         SECURE_DELETE(device);
     }
@@ -215,8 +206,7 @@ int32_t DeviceMonitor::removeDevice(QString &name)
     if (SUCCEED(rc)) {
         rc = mUi->onDeviceRemoved(name);
         if (!SUCCEED(rc)) {
-            QMessageBox::warning(gMW, NULL,
-                "Failed to remove device " + name + " ui.");
+            showError("Failed to remove device " + name + " ui.");
         }
     }
 

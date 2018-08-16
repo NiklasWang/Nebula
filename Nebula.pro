@@ -34,7 +34,8 @@ SOURCES += \
     core/UiComposer.cpp \
     core/MainWindow.cpp \
     core/DeviceMonitor.cpp \
-    core/DeviceControl.cpp
+    core/DeviceControl.cpp \
+    core/common.cpp
 
 HEADERS += \
     version.h \

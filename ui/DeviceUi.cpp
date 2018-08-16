@@ -54,7 +54,7 @@ int32_t DeviceUi::setupUi()
         mGroupBox = new QGroupBox(mCentralWidget);
         mGroupBox->setObjectName(QStringLiteral("mGroupBox"));
         mGroupBox->setEnabled(true);
-        mGroupBox->setGeometry(QRect(10, 10, 500, 850));
+        mGroupBox->setGeometry(QRect(10, 10, GROUP_BOX_WIDTH, GROUP_BOX_HEIGHT));
         fontNormal.setFamily(QStringLiteral("Courier New"));
         fontNormal.setPointSize(10);
         mGroupBox->setFont(fontNormal);
@@ -188,7 +188,9 @@ QString DeviceUi::getName()
 
 QSize DeviceUi::getSize()
 {
-    return QSize(500, 900);
+    return QSize(
+        GROUP_BOX_WIDTH  + 2 * GROUP_BOX_WIDTH_MARGIN,
+        GROUP_BOX_HEIGHT + 2 * GROUP_BOX_HEIGHT_MARGIN);
 }
 
 }

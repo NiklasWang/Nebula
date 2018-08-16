@@ -1,7 +1,7 @@
 #include <QApplication>
-#include <QMessageBox>
 
 #include "utils/common.h"
+#include "core/common.h"
 #include "core/MainWindow.h"
 
 int main(int argc, char *argv[])
@@ -15,8 +15,7 @@ int main(int argc, char *argv[])
         w.show();
         rc = a.exec();
     } else {
-        QMessageBox::warning(&w, NULL,
-            "Failed to construct main window, " + rc);
+        nebula::showError("Failed to construct main window, " + rc);
     }
 
     return rc;

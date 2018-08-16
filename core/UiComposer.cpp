@@ -1,7 +1,7 @@
 #include <QMainWindow>
-#include <QMessageBox>
 
 #include "utils/common.h"
+#include "core/common.h"
 #include "core/UiComposer.h"
 
 namespace nebula {
@@ -26,7 +26,6 @@ int32_t UiComposer::onDeviceAttached(QString &name)
     int32_t rc = NO_ERROR;
     DeviceUi *ui = nullptr;
     bool removeDefaultUi = false;
-    QSize windowSize;
     QSize deviceSize;
 
     if (SUCCEED(rc)) {
@@ -41,8 +40,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
     if (SUCCEED(rc)) {
         for (auto &device : mDeviceUi) {
             if (device->getName() == name) {
-                QMessageBox::warning(mMainWindow, NULL,
-                    "Device UI already exists.");
+                showError("Device UI already exists.");
                 rc = ALREADY_EXISTS;
             }
         }
@@ -52,8 +50,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
         DeviceUi *ui = new DeviceUi(
             mMainWindow, name, mDeviceUi.size() - 1);
         if (ISNULL(ui)) {
-            QMessageBox::warning(mMainWindow, NULL,
-                "Failed to create device ui.");
+            showError("Failed to create device ui.");
         }
     }
 
@@ -75,8 +72,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
     if (SUCCEED(rc)) {
         rc = ui->setupUi();
         if (!SUCCEED(rc)) {
-            QMessageBox::warning(mMainWindow, NULL,
-                "Failed to setup device ui.");
+            showError("Failed to setup device ui.");
             SECURE_DELETE(ui);
         } else {
             mDeviceUi.push_back(ui);
@@ -106,8 +102,7 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
 
     if (SUCCEED(rc)) {
         if (ISNULL(ui)) {
-            QMessageBox::warning(mMainWindow, NULL,
-                "Not found device ui.");
+            showError("Not found device ui.");
             rc = NOT_FOUND;
         }
     }
@@ -117,8 +112,7 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
             defaultUi = true;
             mDefaultUi = new DefaultUi(mMainWindow);
             if (ISNULL(mDefaultUi)) {
-                QMessageBox::critical(mMainWindow, NULL,
-                    "Failed to create default ui.");
+                showError("Failed to create default ui.");
             }
         }
     }
@@ -147,8 +141,7 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
         if (defaultUi) {
             rc = mDefaultUi->setupUi();
             if (!SUCCEED(rc)) {
-                QMessageBox::warning(mMainWindow, NULL,
-                    "Failed to setup default ui.");
+                showError("Failed to setup default ui.");
                 SECURE_DELETE(mDefaultUi);
             }
         }
@@ -168,13 +161,11 @@ int32_t UiComposer::construct()
     if (SUCCEED(rc)) {
         mMainWindowUi = new MainWindowUi(mMainWindow);
         if (ISNULL(mMainWindowUi)) {
-            QMessageBox::critical(mMainWindow, NULL,
-                "Failed to create main window.");
+            showError("Failed to create main window.");
         } else {
             rc = mMainWindowUi->setupUi();
             if (!SUCCEED(rc)) {
-                QMessageBox::warning(mMainWindow, NULL,
-                    "Failed to setup main window.");
+                showError("Failed to setup main window.");
                 SECURE_DELETE(mMainWindowUi);
             }
         }
@@ -183,13 +174,11 @@ int32_t UiComposer::construct()
     if (SUCCEED(rc)) {
         mDefaultUi = new DefaultUi(mMainWindow);
         if (ISNULL(mDefaultUi)) {
-            QMessageBox::critical(mMainWindow, NULL,
-                "Failed to new default ui.");
+            showError("Failed to new default ui.");
         } else {
             rc = mDefaultUi->setupUi();
             if (!SUCCEED(rc)) {
-                QMessageBox::warning(mMainWindow, NULL,
-                    "Failed to setup default ui.");
+                showError("Failed to setup default ui.");
                 SECURE_DELETE(mDefaultUi);
             }
         }
@@ -226,8 +215,7 @@ int32_t UiComposer::destruct()
     }
 
     if (!SUCCEED(rc)) {
-        QMessageBox::warning(mMainWindow, NULL,
-            "Failed to destruct ui composer.");
+        showError("Failed to destruct ui composer.");
     }
 
     return rc;
