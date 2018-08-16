@@ -1,9 +1,12 @@
 #include "QMessageBox"
 
 #include "utils/common.h"
+#include "core/common.h"
 #include "core/MainWindow.h"
 
 namespace nebula {
+
+QMainWindow *gMW = nullptr;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,11 +14,14 @@ MainWindow::MainWindow(QWidget *parent) :
     mUi(nullptr),
     mMonitor(nullptr)
 {
+    gMW = this;
 }
 
 MainWindow::~MainWindow()
 {
-
+    if (mConstructed) {
+        destruct();
+    }
 }
 
 int32_t MainWindow::construct()
@@ -44,7 +50,7 @@ int32_t MainWindow::construct()
     }
 
     if (SUCCEED(rc)) {
-        mMonitor = new DeviceMonitor(mUi, this);
+        mMonitor = new DeviceMonitor(mUi);
         if (ISNULL(mMonitor)) {
             QMessageBox::critical(this, NULL,
                 "Failed to create ui composer.");
@@ -93,10 +99,6 @@ int32_t MainWindow::destruct()
             QMessageBox::warning(this, NULL,
                 "Failed to stop monitor, " + rc);
         }
-    }
-
-    if (SUCCEED(rc)) {
-        mMonitor->quit();
         SECURE_DELETE(mMonitor);
     }
 

@@ -33,7 +33,8 @@ SOURCES += \
     ui/DeviceUi.cpp \
     core/UiComposer.cpp \
     core/MainWindow.cpp \
-    core/DeviceMonitor.cpp
+    core/DeviceMonitor.cpp \
+    core/DeviceControl.cpp
 
 HEADERS += \
     version.h \
@@ -50,7 +51,10 @@ HEADERS += \
     utils/TimeEx.h \
     core/MainWindow.h \
     core/UiComposer.h \
-    core/DeviceMonitor.h
+    core/DeviceMonitor.h \
+    core/DeviceControl.h \
+    core/CmdPrefix.h \
+    core/common.h
 
 FORMS += \
     ui/MainWindow.ui \

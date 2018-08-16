@@ -2,11 +2,11 @@
 #define DEVICEMONITOR_H
 
 #include <QThread>
-#include <QWidget>
 
 #include "utils/common.h"
 #include "utils/Semaphore.h"
 #include "core/UiComposer.h"
+#include "core/DeviceControl.h"
 
 namespace nebula {
 
@@ -18,12 +18,15 @@ public:
     int32_t exitMonitor();
 
 public:
-    explicit DeviceMonitor(UiComposer *ui, QWidget *widget);
+    explicit DeviceMonitor(UiComposer *ui);
     ~DeviceMonitor();
 
 private:
     int32_t doTask();
     int32_t doTaskLoop();
+    int32_t checkDevices(QString &output);
+    int32_t addDevice(QString &name);
+    int32_t removeDevice(QString &name);
 
 protected:
     void run() override;
@@ -31,8 +34,9 @@ protected:
 private:
     bool        mExit;
     Semaphore   mExitSem;
+    int32_t     mLoopCnt;
     UiComposer *mUi;
-    QWidget    *mWidget;
+    std::list<DeviceControl *> mDevices;
 };
 
 }
