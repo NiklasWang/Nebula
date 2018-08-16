@@ -12,6 +12,11 @@ UiComposer::UiComposer(QMainWindow *window) :
     mMainWindowUi(nullptr),
     mDefaultUi(nullptr)
 {
+    qRegisterMetaType<DrawUiFunc>("DrawUiFunc");
+
+    connect(this, SIGNAL(drawUi(DrawUiFunc)),
+            this, SLOT(onDrawUi(DrawUiFunc)),
+            Qt::QueuedConnection);
 }
 
 UiComposer::~UiComposer()
@@ -32,7 +37,6 @@ int32_t UiComposer::onDeviceAttached(QString &name)
         if (!mDeviceUi.size()) {
             removeDefaultUi = true;
             QSize size = mDefaultUi->getSize();
-            SECURE_DELETE(mDefaultUi);
             mMainWindow->resize(size);
         }
     }
@@ -70,11 +74,31 @@ int32_t UiComposer::onDeviceAttached(QString &name)
     }
 
     if (SUCCEED(rc)) {
-        rc = ui->setupUi();
+        rc = drawUi(DrawUiFunc(
+            [removeDefaultUi, this]() -> int32_t {
+                if (removeDefaultUi) {
+                    SECURE_DELETE(mDefaultUi);
+                }
+                return NO_ERROR;
+            }
+        ));
         if (!SUCCEED(rc)) {
-            showError("Failed to setup device ui.");
-            SECURE_DELETE(ui);
-        } else {
+            showError("Failed to remove default ui.");
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        rc = drawUi(DrawUiFunc(
+            [&]() -> int32_t {
+                int32_t _rc = ui->setupUi();
+                if (!SUCCEED(_rc)) {
+                    showError("Failed to setup device ui.");
+                    SECURE_DELETE(ui);
+                }
+                return _rc;
+            }
+        ));
+        if (SUCCEED(rc)) {
             mDeviceUi.push_back(ui);
         }
     }
@@ -219,6 +243,25 @@ int32_t UiComposer::destruct()
     }
 
     return rc;
+}
+
+int32_t UiComposer::onDrawUi(DrawUiFunc func)
+{
+    return func();
+}
+
+UiComposer::DrawUiFunc::DrawUiFunc()
+{
+}
+
+UiComposer::DrawUiFunc::DrawUiFunc(std::function<int32_t ()> func) :
+    mFunc(func)
+{
+}
+
+int32_t UiComposer::DrawUiFunc::operator()()
+{
+    return NOTNULL(mFunc) ? mFunc() : NOT_INITED;
 }
 
 }
