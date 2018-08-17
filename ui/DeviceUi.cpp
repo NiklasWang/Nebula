@@ -1,14 +1,15 @@
 #include "utils/common.h"
+#include "core/common.h"
+#include "core/MainWindow.h"
 #include "DeviceUi.h"
 #include "ui/UiLayout.h"
 
 namespace nebula {
 
-DeviceUi::DeviceUi(QMainWindow *window, QString &name, int32_t id) :
+DeviceUi::DeviceUi(QWidget *parent, QString &name, int32_t id) :
     mId(id),
     mName(name),
-    mMainWindow(window),
-    mCentralWidget(nullptr),
+    mParent(parent),
     mGroupBox(nullptr),
     mGridLayoutWidget(nullptr),
     mGridLayout(nullptr),
@@ -27,32 +28,31 @@ DeviceUi::DeviceUi(QMainWindow *window, QString &name, int32_t id) :
 
 DeviceUi::~DeviceUi()
 {
-    SECURE_DELETE(mDebugEditor);
-    SECURE_DELETE(mResultLabel);
-    SECURE_DELETE(mPictureLabel3);
-    SECURE_DELETE(mTextLabel3);
-    SECURE_DELETE(mPictureLabel2);
-    SECURE_DELETE(mTextLabel2);
-    SECURE_DELETE(mPictureLabel1);
-    SECURE_DELETE(mTextLabel1);
-    SECURE_DELETE(mPictureLabel0);
-    SECURE_DELETE(mTextLabel0);
-    SECURE_DELETE(mGridLayout);
-    SECURE_DELETE(mGridLayoutWidget);
-    SECURE_DELETE(mGroupBox);
-    SECURE_DELETE(mCentralWidget);
+    mDebugEditor->deleteLater();
+    mResultLabel->deleteLater();
+    mPictureLabel3->deleteLater();
+    mTextLabel3->deleteLater();
+    mPictureLabel2->deleteLater();
+    mTextLabel2->deleteLater();
+    mPictureLabel1->deleteLater();
+    mTextLabel1->deleteLater();
+    mPictureLabel0->deleteLater();
+    mTextLabel0->deleteLater();
+    mGridLayout->deleteLater();
+    mGridLayoutWidget->deleteLater();
+    mGroupBox->deleteLater();
 }
 
 int32_t DeviceUi::setupUi()
 {
     int32_t rc = NO_ERROR;
     QFont fontNormal, fontTextLabel;
-    int32_t x = mMainWindow->width();
-    int32_t y = mMainWindow->height();
+    int32_t x = gMW->width();
+    int32_t y = gMW->height();
+    int32_t width = 0;
+    int32_t height = 0;
 
     if (SUCCEED(rc)) {
-        int32_t width = 0;
-        int32_t height = 0;
         QSize size = getSize();
         if (!mId) {
             width = size.width();
@@ -62,17 +62,10 @@ int32_t DeviceUi::setupUi()
             width = x + size.width();
             height = y > size.height() ? y : size.height();
         }
-        mMainWindow->resize(width, height);
     }
 
     if (SUCCEED(rc)) {
-        mCentralWidget = new QWidget(mMainWindow);
-        mCentralWidget->setObjectName(QStringLiteral("centralWidget"));
-        mMainWindow->setCentralWidget(mCentralWidget);
-    }
-
-    if (SUCCEED(rc)) {
-        mGroupBox = new QGroupBox(mCentralWidget);
+        mGroupBox = new QGroupBox(mParent);
         mGroupBox->setObjectName(QStringLiteral("mGroupBox"));
         mGroupBox->setEnabled(true);
         mGroupBox->setGeometry(QRect(x + GROUP_BOX_WIDTH_MARGIN,
@@ -171,9 +164,24 @@ int32_t DeviceUi::setupUi()
         mDebugEditor->setFont(fontNormal);
     }
 
-    if (SUCCEED(rc)) {
+
+
+    if (ISNULL(mGroupBox)   || ISNULL(mGridLayoutWidget) ||
+        ISNULL(mGridLayout) || ISNULL(mPictureLabel0) ||
+        ISNULL(mTextLabel0) || ISNULL(mPictureLabel1) ||
+        ISNULL(mTextLabel1) || ISNULL(mPictureLabel2) ||
+        ISNULL(mTextLabel2) || ISNULL(mPictureLabel3) ||
+        ISNULL(mTextLabel3) || ISNULL(mResultLabel) ||
+        ISNULL(mDebugEditor)) {
+        rc = NO_MEMORY;
+    } else {
         rc = retranslateUi();
-        QMetaObject::connectSlotsByName(mMainWindow);
+    }
+
+    if (SUCCEED(rc)) {
+        gMW->resize(width, height);
+        gMW->setCentralWidget(mParent);
+        QMetaObject::connectSlotsByName(gMW);
     }
 
     return rc;

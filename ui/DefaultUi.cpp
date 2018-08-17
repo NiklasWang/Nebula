@@ -1,6 +1,8 @@
 #include <QApplication>
 
 #include "utils/common.h"
+#include "core/common.h"
+#include "core/MainWindow.h"
 #include "ui/DefaultUi.h"
 #include "ui/UiLayout.h"
 
@@ -10,9 +12,8 @@
 
 namespace nebula {
 
-DefaultUi::DefaultUi(QMainWindow *window) :
-    mMainWindow(window),
-    mCentralWidget(nullptr),
+DefaultUi::DefaultUi(QWidget *parent) :
+    mParent(parent),
     mDefaultLabel(nullptr),
     mDataPathLabel(nullptr),
     mDataPathEdit(nullptr),
@@ -22,11 +23,10 @@ DefaultUi::DefaultUi(QMainWindow *window) :
 
 DefaultUi::~DefaultUi()
 {
-    SECURE_DELETE(mDefaultLabel);
-    SECURE_DELETE(mDataPathLabel);
-    SECURE_DELETE(mDataPathEdit);
-    SECURE_DELETE(mSelectButton);
-    SECURE_DELETE(mCentralWidget);
+    mDefaultLabel->deleteLater();
+    mDataPathLabel->deleteLater();
+    mDataPathEdit->deleteLater();
+    mSelectButton->deleteLater();
 }
 
 int32_t DefaultUi::setupUi()
@@ -36,17 +36,7 @@ int32_t DefaultUi::setupUi()
     QFont fontSmall;
 
     if (SUCCEED(rc)) {
-        mMainWindow->resize(DEFAULT_UI_WIDTH, DEFAULT_UI_HEIGHT);
-    }
-
-    if (SUCCEED(rc)) {
-        mCentralWidget = new QWidget(mMainWindow);
-        mCentralWidget->setObjectName(QStringLiteral("centralWidget"));
-        mMainWindow->setCentralWidget(mCentralWidget);
-    }
-
-    if (SUCCEED(rc)) {
-        mDefaultLabel = new QLabel(mCentralWidget);
+        mDefaultLabel = new QLabel(mParent);
         mDefaultLabel->setObjectName(QStringLiteral("defaultLabel"));
         mDefaultLabel->setGeometry(QRect(30, 20, 491, 81));
         fontBig.setFamily(QStringLiteral("Calibri"));
@@ -57,7 +47,7 @@ int32_t DefaultUi::setupUi()
     }
 
     if (SUCCEED(rc)) {
-        mDataPathLabel = new QLabel(mCentralWidget);
+        mDataPathLabel = new QLabel(mParent);
         mDataPathLabel->setObjectName(QStringLiteral("dataPathLabel"));
         mDataPathLabel->setGeometry(QRect(30, 110, 91, 41));
     }
@@ -71,25 +61,30 @@ int32_t DefaultUi::setupUi()
     }
 
     if (SUCCEED(rc)) {
-        mDataPathEdit = new QLineEdit(mCentralWidget);
+        mDataPathEdit = new QLineEdit(mParent);
         mDataPathEdit->setObjectName(QStringLiteral("dataPathEdit"));
         mDataPathEdit->setGeometry(QRect(130, 120, 301, 31));
         mDataPathEdit->setFont(fontSmall);
     }
 
     if (SUCCEED(rc)) {
-        mSelectButton = new QPushButton(mCentralWidget);
+        mSelectButton = new QPushButton(mParent);
         mSelectButton->setObjectName(QStringLiteral("selectButton"));
         mSelectButton->setGeometry(QRect(444, 120, 91, 31));
         mSelectButton->setFont(fontSmall);
     }
 
-    if (ISNULL(mCentralWidget) || ISNULL(mDefaultLabel) ||
-        ISNULL(mDataPathLabel) || ISNULL(mDataPathEdit) ||
-        ISNULL(mSelectButton)) {
+    if (ISNULL(mDefaultLabel) || ISNULL(mDataPathLabel) ||
+        ISNULL(mDataPathEdit) || ISNULL(mSelectButton)) {
         rc = NO_MEMORY;
     } else {
         rc = retranslateUi();
+    }
+
+    if (SUCCEED(rc)) {
+        gMW->resize(DEFAULT_UI_WIDTH, DEFAULT_UI_HEIGHT);
+        gMW->setCentralWidget(mParent);
+        QMetaObject::connectSlotsByName(gMW);
     }
 
     return rc;

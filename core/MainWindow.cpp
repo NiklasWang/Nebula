@@ -111,23 +111,23 @@ int32_t MainWindow::onDialogShow(MessageType type, const QString msg)
 
     switch (type) {
         case MESSAGE_TYPE_INFORMATION: {
-            btn = QMessageBox::information(this, NULL, msg);
+            btn = QMessageBox::information(this, nullptr, msg);
         }; break;
         case MESSAGE_TYPE_QUESTION: {
-            btn = QMessageBox::question(this, NULL, msg);
+            btn = QMessageBox::question(this, nullptr, msg);
         }; break;
         case MESSAGE_TYPE_WARNING: {
-            btn = QMessageBox::warning(this, NULL, msg);
+            btn = QMessageBox::warning(this, nullptr, msg);
         }; break;
         case MESSAGE_TYPE_ERROR: {
-            btn = QMessageBox::warning(this, NULL, msg);
+            btn = QMessageBox::warning(this, nullptr, msg);
         }; break;
         case MESSAGE_TYPE_CRITICAL: {
-            btn = QMessageBox::critical(this, NULL, msg);
+            btn = QMessageBox::critical(this, nullptr, msg);
         }; break;
         case MESSAGE_TYPE_MAX_INVALID:
         default: {
-            btn = QMessageBox::critical(this, NULL, msg);
+            btn = QMessageBox::critical(this, nullptr, msg);
         }; break;
     }
 

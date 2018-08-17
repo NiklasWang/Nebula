@@ -7,6 +7,7 @@ namespace nebula {
 
 class MainWindow;
 
+// only one main window in this application
 extern MainWindow *gMW;
 
 enum MessageType {

@@ -151,7 +151,7 @@ int32_t DeviceMonitor::checkDevices(QString &output)
 int32_t DeviceMonitor::addDevice(QString &name)
 {
     int32_t rc = NO_ERROR;
-    DeviceControl *device = NULL;
+    DeviceControl *device = nullptr;
 
     if (SUCCEED(rc)) {
         device = new DeviceControl(name);
@@ -182,7 +182,7 @@ int32_t DeviceMonitor::addDevice(QString &name)
 int32_t DeviceMonitor::removeDevice(QString &name)
 {
     int32_t rc = NOT_FOUND;
-    DeviceControl *device = NULL;
+    DeviceControl *device = nullptr;
 
     if (SUCCEED(rc)) {
         for (auto iter = mDevices.begin(); iter != mDevices.end(); iter++) {

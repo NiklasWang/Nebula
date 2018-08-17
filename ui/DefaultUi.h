@@ -19,12 +19,11 @@ public:
     QSize getSize();
 
 public:
-    explicit DefaultUi(QMainWindow *window);
+    explicit DefaultUi(QWidget *parent);
     ~DefaultUi();
 
 private:
-    QMainWindow *mMainWindow;
-    QWidget *mCentralWidget;
+    QWidget *mParent;
     QLabel  *mDefaultLabel;
     QLabel  *mDataPathLabel;
     QLineEdit   *mDataPathEdit;

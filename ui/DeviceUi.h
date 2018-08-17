@@ -21,7 +21,7 @@ public:
     QSize getSize();
 
 public:
-    explicit DeviceUi(QMainWindow *window, QString &name, int32_t id);
+    explicit DeviceUi(QWidget *parent, QString &name, int32_t id);
     ~DeviceUi();
 
 private:
@@ -30,7 +30,7 @@ private:
 
 private:
     QMainWindow *mMainWindow;
-    QWidget     *mCentralWidget;
+    QWidget     *mParent;
     QGroupBox   *mGroupBox;
     QWidget     *mGridLayoutWidget;
     QGridLayout *mGridLayout;

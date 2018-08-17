@@ -9,6 +9,7 @@ namespace nebula {
 UiComposer::UiComposer(QMainWindow *window) :
     mConstructed(false),
     mMainWindow(window),
+    mBaseWidget(nullptr),
     mMainWindowUi(nullptr),
     mDefaultUi(nullptr)
 {
@@ -50,7 +51,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
 
     if (SUCCEED(rc)) {
         ui = new DeviceUi(
-            mMainWindow, name, mDeviceUi.size());
+            mBaseWidget, name, mDeviceUi.size());
         if (ISNULL(ui)) {
             showError("Failed to create device ui.");
         }
@@ -116,7 +117,7 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
     if (SUCCEED(rc)) {
         if (!mDeviceUi.size()) {
             defaultUi = true;
-            mDefaultUi = new DefaultUi(mMainWindow);
+            mDefaultUi = new DefaultUi(mBaseWidget);
             if (ISNULL(mDefaultUi)) {
                 showError("Failed to create default ui.");
             }
@@ -164,6 +165,17 @@ int32_t UiComposer::construct()
     }
 
     if (SUCCEED(rc)) {
+        mBaseWidget = new QWidget(mMainWindow);
+        if (ISNULL(mBaseWidget)) {
+            showError("Failed to create base widget.");
+            rc = NO_MEMORY;
+        } else {
+            mBaseWidget->setObjectName(
+                QStringLiteral("centralWidget"));
+        }
+    }
+
+    if (SUCCEED(rc)) {
         mMainWindowUi = new MainWindowUi(mMainWindow);
         if (ISNULL(mMainWindowUi)) {
             showError("Failed to create main window.");
@@ -177,7 +189,7 @@ int32_t UiComposer::construct()
     }
 
     if (SUCCEED(rc)) {
-        mDefaultUi = new DefaultUi(mMainWindow);
+        mDefaultUi = new DefaultUi(mBaseWidget);
         if (ISNULL(mDefaultUi)) {
             showError("Failed to new default ui.");
         } else {
@@ -217,6 +229,14 @@ int32_t UiComposer::destruct()
     if (SUCCEED(rc)) {
         SECURE_DELETE(mDefaultUi);
         SECURE_DELETE(mMainWindowUi);
+    }
+
+    if (SUCCEED(rc)) {
+        if (NOTNULL(mBaseWidget)) {
+            mBaseWidget->setParent(nullptr);
+            mBaseWidget->deleteLater();
+            mBaseWidget = nullptr;
+        }
     }
 
     if (!SUCCEED(rc)) {

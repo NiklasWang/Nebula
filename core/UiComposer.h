@@ -37,6 +37,7 @@ private slots:
 private:
     bool          mConstructed;
     QMainWindow  *mMainWindow;
+    QWidget      *mBaseWidget;
     MainWindowUi *mMainWindowUi;
     DefaultUi    *mDefaultUi;
     std::list<DeviceUi *> mDeviceUi;
