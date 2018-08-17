@@ -28,19 +28,11 @@ public:
     int32_t construct();
     int32_t destruct();
 
-private:
-    struct DrawUiFunc {
-        std::function<int32_t ()> mFunc;
-        DrawUiFunc(std::function<int32_t ()> func);
-        DrawUiFunc();
-        int32_t operator()();
-    };
-
 signals:
-    int32_t drawUi(DrawUiFunc func);
+    int32_t drawUi(std::function<int32_t ()> func);
 
 private slots:
-    int32_t onDrawUi(DrawUiFunc func);
+    int32_t onDrawUi(std::function<int32_t ()> func);
 
 private:
     bool          mConstructed;

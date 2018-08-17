@@ -12,11 +12,12 @@ UiComposer::UiComposer(QMainWindow *window) :
     mMainWindowUi(nullptr),
     mDefaultUi(nullptr)
 {
-    qRegisterMetaType<DrawUiFunc>("DrawUiFunc");
+    qRegisterMetaType<MessageType>("MessageType");
+    qRegisterMetaType<std::function<int32_t ()> >("std::function<int32_t ()>");
 
-    connect(this, SIGNAL(drawUi(DrawUiFunc)),
-            this, SLOT(onDrawUi(DrawUiFunc)),
-            Qt::QueuedConnection);
+    connect(this, SIGNAL(drawUi(std::function<int32_t ()>)),
+            this, SLOT(onDrawUi(std::function<int32_t ()>)),
+            Qt::BlockingQueuedConnection);
 }
 
 UiComposer::~UiComposer()
@@ -31,13 +32,10 @@ int32_t UiComposer::onDeviceAttached(QString &name)
     int32_t rc = NO_ERROR;
     DeviceUi *ui = nullptr;
     bool removeDefaultUi = false;
-    QSize deviceSize;
 
     if (SUCCEED(rc)) {
         if (!mDeviceUi.size()) {
             removeDefaultUi = true;
-            QSize size = mDefaultUi->getSize();
-            mMainWindow->resize(size);
         }
     }
 
@@ -51,44 +49,29 @@ int32_t UiComposer::onDeviceAttached(QString &name)
     }
 
     if (SUCCEED(rc)) {
-        DeviceUi *ui = new DeviceUi(
-            mMainWindow, name, mDeviceUi.size() - 1);
+        ui = new DeviceUi(
+            mMainWindow, name, mDeviceUi.size());
         if (ISNULL(ui)) {
             showError("Failed to create device ui.");
         }
     }
 
     if (SUCCEED(rc)) {
-        deviceSize = ui->getSize();
-        int32_t width = 0;
-        int32_t height = 0;
-        if (removeDefaultUi) {
-            width = deviceSize.width();
-            height = deviceSize.height();
-        } else {
-            width = mMainWindow->width() + deviceSize.width();
-            height = mMainWindow->height() > deviceSize.height() ?
-                mMainWindow->height() : deviceSize.height();
-        }
-        mMainWindow->resize(width, height);
-    }
-
-    if (SUCCEED(rc)) {
-        rc = drawUi(DrawUiFunc(
+        rc = drawUi(
             [removeDefaultUi, this]() -> int32_t {
                 if (removeDefaultUi) {
                     SECURE_DELETE(mDefaultUi);
                 }
                 return NO_ERROR;
             }
-        ));
+        );
         if (!SUCCEED(rc)) {
             showError("Failed to remove default ui.");
         }
     }
 
     if (SUCCEED(rc)) {
-        rc = drawUi(DrawUiFunc(
+        rc = drawUi(
             [&]() -> int32_t {
                 int32_t _rc = ui->setupUi();
                 if (!SUCCEED(_rc)) {
@@ -97,7 +80,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
                 }
                 return _rc;
             }
-        ));
+        );
         if (SUCCEED(rc)) {
             mDeviceUi.push_back(ui);
         }
@@ -111,7 +94,6 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
     int32_t rc = NO_ERROR;
     DeviceUi *ui = nullptr;
     bool defaultUi = false;
-    QSize deviceSize;
 
     if (SUCCEED(rc)) {
         for (auto iter = mDeviceUi.begin();
@@ -142,33 +124,32 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
     }
 
     if (SUCCEED(rc)) {
-        deviceSize = ui->getSize();
-        SECURE_DELETE(ui);
-    }
-
-    if (SUCCEED(rc)) {
-        int32_t width = 0;
-        int32_t height = 0;
-        if (defaultUi) {
-            QSize size = mDefaultUi->getSize();
-            width = size.width();
-            height = size.height();
-        } else {
-            width = mMainWindow->width() - deviceSize.width();
-            height = mMainWindow->width() - (
-                mMainWindow->width() - deviceSize.height());
-        }
-        mMainWindow->resize(width, height);
-    }
-
-    if (SUCCEED(rc)) {
-        if (defaultUi) {
-            rc = mDefaultUi->setupUi();
-            if (!SUCCEED(rc)) {
-                showError("Failed to setup default ui.");
-                SECURE_DELETE(mDefaultUi);
+        rc = drawUi(
+            [&]() -> int32_t {
+                SECURE_DELETE(ui);
+                return NO_ERROR;
             }
+        );
+        if (!SUCCEED(rc)) {
+            showError("Failed to remove default ui.");
         }
+        ui = nullptr;
+    }
+
+    if (SUCCEED(rc)) {
+        rc = drawUi(
+            [defaultUi, this]() -> int32_t {
+                int32_t _rc = NO_ERROR;
+                if (defaultUi) {
+                    _rc = mDefaultUi->setupUi();
+                    if (!SUCCEED(_rc)) {
+                        showError("Failed to setup default ui.");
+                        SECURE_DELETE(mDefaultUi);
+                    }
+                }
+                return _rc;
+            }
+        );
     }
 
     return rc;
@@ -245,23 +226,9 @@ int32_t UiComposer::destruct()
     return rc;
 }
 
-int32_t UiComposer::onDrawUi(DrawUiFunc func)
+int32_t UiComposer::onDrawUi(std::function<int32_t ()> func)
 {
     return func();
-}
-
-UiComposer::DrawUiFunc::DrawUiFunc()
-{
-}
-
-UiComposer::DrawUiFunc::DrawUiFunc(std::function<int32_t ()> func) :
-    mFunc(func)
-{
-}
-
-int32_t UiComposer::DrawUiFunc::operator()()
-{
-    return NOTNULL(mFunc) ? mFunc() : NOT_INITED;
 }
 
 }

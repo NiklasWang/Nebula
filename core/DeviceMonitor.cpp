@@ -89,7 +89,7 @@ int32_t DeviceMonitor::doTask()
     QString output = process->readAll();
 
     rc = checkDevices(output);
-    if (SUCCEED(rc)) {
+    if (!SUCCEED(rc)) {
         showError("Failed to check device.\n" + output);
     }
 

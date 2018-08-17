@@ -47,14 +47,36 @@ int32_t DeviceUi::setupUi()
 {
     int32_t rc = NO_ERROR;
     QFont fontNormal, fontTextLabel;
+    int32_t x = mMainWindow->width();
+    int32_t y = mMainWindow->height();
+
+    if (SUCCEED(rc)) {
+        int32_t width = 0;
+        int32_t height = 0;
+        QSize size = getSize();
+        if (!mId) {
+            width = size.width();
+            height = size.height();
+            x = y = 0;
+        } else {
+            width = x + size.width();
+            height = y > size.height() ? y : size.height();
+        }
+        mMainWindow->resize(width, height);
+    }
 
     if (SUCCEED(rc)) {
         mCentralWidget = new QWidget(mMainWindow);
         mCentralWidget->setObjectName(QStringLiteral("centralWidget"));
+        mMainWindow->setCentralWidget(mCentralWidget);
+    }
+
+    if (SUCCEED(rc)) {
         mGroupBox = new QGroupBox(mCentralWidget);
         mGroupBox->setObjectName(QStringLiteral("mGroupBox"));
         mGroupBox->setEnabled(true);
-        mGroupBox->setGeometry(QRect(10, 10, GROUP_BOX_WIDTH, GROUP_BOX_HEIGHT));
+        mGroupBox->setGeometry(QRect(x + GROUP_BOX_WIDTH_MARGIN,
+            y + GROUP_BOX_HEIGHT_MARGIN, GROUP_BOX_WIDTH, GROUP_BOX_HEIGHT));
         fontNormal.setFamily(QStringLiteral("Courier New"));
         fontNormal.setPointSize(10);
         mGroupBox->setFont(fontNormal);
@@ -169,7 +191,7 @@ int32_t DeviceUi::retranslateUi()
     mTextLabel2->setText(QApplication::translate("MainWindow", "Device Detected", nullptr));
     mPictureLabel3->setText(QString());
     mTextLabel3->setText(QApplication::translate("MainWindow", "Saving Record", nullptr));
-    mResultLabel->setText(QApplication::translate("MainWindow", "......", nullptr));
+    mResultLabel->setText(QApplication::translate("MainWindow", mName.toLocal8Bit().data(), nullptr));
     mDebugEditor->setHtml(QApplication::translate("MainWindow",
         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
