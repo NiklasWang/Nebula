@@ -58,8 +58,10 @@ HEADERS += \
     core/common.h
 
 FORMS += \
-    ui/MainWindow.ui \
-    ui/Device.ui
+    designer/LegacyDefault.ui \
+    designer/LegacyDevice.ui \
+    designer/Default.ui \
+    designer/Devices.ui
 
 RESOURCES += \
     resource/Pictures.qrc
