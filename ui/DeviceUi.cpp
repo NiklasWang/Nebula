@@ -66,7 +66,7 @@ int32_t DeviceUi::setupUi()
 
     if (SUCCEED(rc)) {
         mGroupBox = new QGroupBox(mParent);
-        mGroupBox->setObjectName(QStringLiteral("mGroupBox"));
+        mGroupBox->setObjectName(QStringLiteral("groupBox_") + mId);
         mGroupBox->setEnabled(true);
         mGroupBox->setGeometry(QRect(x + GROUP_BOX_WIDTH_MARGIN,
             y + GROUP_BOX_HEIGHT_MARGIN, GROUP_BOX_WIDTH, GROUP_BOX_HEIGHT));
@@ -164,8 +164,6 @@ int32_t DeviceUi::setupUi()
         mDebugEditor->setFont(fontNormal);
     }
 
-
-
     if (ISNULL(mGroupBox)   || ISNULL(mGridLayoutWidget) ||
         ISNULL(mGridLayout) || ISNULL(mPictureLabel0) ||
         ISNULL(mTextLabel0) || ISNULL(mPictureLabel1) ||
@@ -180,6 +178,7 @@ int32_t DeviceUi::setupUi()
 
     if (SUCCEED(rc)) {
         gMW->resize(width, height);
+        mGroupBox->show();
         gMW->setCentralWidget(mParent);
         QMetaObject::connectSlotsByName(gMW);
     }
