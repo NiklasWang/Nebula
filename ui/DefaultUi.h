@@ -2,12 +2,12 @@
 #define UIDEFAULT_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QMainWindow>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QSpacerItem>
 
 namespace nebula {
 
@@ -23,11 +23,14 @@ public:
     ~DefaultUi();
 
 private:
-    QWidget *mParent;
-    QLabel  *mDefaultLabel;
-    QLabel  *mDataPathLabel;
-    QLineEdit   *mDataPathEdit;
-    QPushButton *mSelectButton;
+    QWidget     *mParent;
+    QWidget     *mGridLayoutWidget;
+    QGridLayout *mGridLayout;
+    QLabel      *mNotifyLabel;
+    QSpacerItem *mVerticalSpacer;
+    QLabel      *mPathLabel;
+    QLineEdit   *mPathEditor;
+    QPushButton *mSelectBtn;
 };
 
 }

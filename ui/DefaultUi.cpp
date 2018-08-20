@@ -6,83 +6,117 @@
 #include "ui/DefaultUi.h"
 #include "ui/UiLayout.h"
 
-#define DEFAULT_UI_WIDTH  560
-#define DEFAULT_UI_HEIGHT 210
+#define DEFAULT_UI_WIDTH  521
+#define DEFAULT_UI_HEIGHT 121
+#define DEFAULT_UI_MENU_STATUS_HEIGHT 40
+#define DEFAULT_UI_LEFT_MARGIN 10
+#define DEFAULT_UI_TOP_MARGIN  10
 #define DEFAULT_UI_MENU_HEIGHT 21
 
 namespace nebula {
 
 DefaultUi::DefaultUi(QWidget *parent) :
     mParent(parent),
-    mDefaultLabel(nullptr),
-    mDataPathLabel(nullptr),
-    mDataPathEdit(nullptr),
-    mSelectButton(nullptr)
+    mGridLayoutWidget(nullptr),
+    mGridLayout(nullptr),
+    mNotifyLabel(nullptr),
+    mVerticalSpacer(nullptr),
+    mPathLabel(nullptr),
+    mPathEditor(nullptr),
+    mSelectBtn(nullptr),
 {
 }
 
 DefaultUi::~DefaultUi()
 {
-    mDefaultLabel->deleteLater();
-    mDataPathLabel->deleteLater();
-    mDataPathEdit->deleteLater();
-    mSelectButton->deleteLater();
+    mGridLayoutWidget->setParent(nullptr);
+    mGridLayoutWidget->deleteLater();
 }
 
 int32_t DefaultUi::setupUi()
 {
     int32_t rc = NO_ERROR;
-    QFont fontBig;
-    QFont fontSmall;
 
     if (SUCCEED(rc)) {
-        mDefaultLabel = new QLabel(mParent);
-        mDefaultLabel->setObjectName(QStringLiteral("defaultLabel"));
-        mDefaultLabel->setGeometry(QRect(30, 20, 491, 81));
-        fontBig.setFamily(QStringLiteral("Calibri"));
-        fontBig.setPointSize(36);
-        fontBig.setBold(true);
-        fontBig.setWeight(75);
-        mDefaultLabel->setFont(fontBig);
+        gMW->resize(DEFAULT_UI_WIDTH + 2 * DEFAULT_UI_LEFT_MARGIN,
+            DEFAULT_UI_HEIGHT + 2 * DEFAULT_UI_TOP_MARGIN + DEFAULT_UI_MENU_STATUS_HEIGHT);
     }
 
     if (SUCCEED(rc)) {
-        mDataPathLabel = new QLabel(mParent);
-        mDataPathLabel->setObjectName(QStringLiteral("dataPathLabel"));
-        mDataPathLabel->setGeometry(QRect(30, 110, 91, 41));
+        mGridLayoutWidget = new QWidget(parent);
+        mGridLayoutWidget->setObjectName(QStringLiteral("mGridLayoutWidget"));
+        mGridLayoutWidget->setGeometry(QRect(
+            DEFAULT_UI_LEFT_MARGIN, DEFAULT_UI_TOP_MARGIN,
+            DEFAULT_UI_WIDTH, DEFAULT_UI_HEIGHT));
+        mGridLayout = new QGridLayout(mGridLayoutWidget);
+        mGridLayout->setObjectName(QStringLiteral("mGridLayout"));
+        mGridLayout->setContentsMargins(0, 0, 0, 0);
     }
 
     if (SUCCEED(rc)) {
-        fontSmall.setFamily(QStringLiteral("Calibri"));
-        fontSmall.setPointSize(16);
-        fontSmall.setBold(false);
-        fontSmall.setWeight(50);
-        mDataPathLabel->setFont(fontSmall);
+        mPathLabel = new QLabel(mGridLayoutWidget);
+        mPathLabel->setObjectName(QStringLiteral("mPathLabel"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(mPathLabel->sizePolicy().hasHeightForWidth());
+        mPathLabel->setSizePolicy(sizePolicy);
+        QFont font;
+        font.setFamily(QStringLiteral("Calibri"));
+        font.setPointSize(18);
+        font.setBold(true);
+        font.setWeight(75);
+        mPathLabel->setFont(font);
+        mGridLayout->addWidget(mPathLabel, 2, 0, 1, 1);
     }
 
     if (SUCCEED(rc)) {
-        mDataPathEdit = new QLineEdit(mParent);
-        mDataPathEdit->setObjectName(QStringLiteral("dataPathEdit"));
-        mDataPathEdit->setGeometry(QRect(130, 120, 301, 31));
-        mDataPathEdit->setFont(fontSmall);
+        mSelectBtn = new QPushButton(mGridLayoutWidget);
+        mSelectBtn->setObjectName(QStringLiteral("mSelectBtn"));
+        QFont font;
+        font.setFamily(QStringLiteral("Calibri"));
+        font.setPointSize(18);
+        mSelectBtn->setFont(font);
+        mGridLayout->addWidget(mSelectBtn, 2, 2, 1, 1);
     }
 
     if (SUCCEED(rc)) {
-        mSelectButton = new QPushButton(mParent);
-        mSelectButton->setObjectName(QStringLiteral("selectButton"));
-        mSelectButton->setGeometry(QRect(444, 120, 91, 31));
-        mSelectButton->setFont(fontSmall);
+        mPathEditor = new QLineEdit(mGridLayoutWidget);
+        mPathEditor->setObjectName(QStringLiteral("mPathEditor"));
+        QFont font;
+        font.setFamily(QStringLiteral("Calibri"));
+        font.setPointSize(18);
+        mPathEditor->setFont(font);
+        mGridLayout->addWidget(mPathEditor, 2, 1, 1, 1);
     }
 
-    if (ISNULL(mDefaultLabel) || ISNULL(mDataPathLabel) ||
-        ISNULL(mDataPathEdit) || ISNULL(mSelectButton)) {
+    if (SUCCEED(rc)) {
+        mNotifyLabel = new QLabel(mGridLayoutWidget);
+        mNotifyLabel->setObjectName(QStringLiteral("mNotifyLabel"));
+        QFont font;
+        font.setFamily(QStringLiteral("Calibri"));
+        font.setPointSize(36);
+        font.setBold(true);
+        font.setWeight(75);
+        mNotifyLabel->setFont(font);
+        mGridLayout->addWidget(mNotifyLabel, 0, 0, 1, 3);
+    }
+
+    if (SUCCEED(rc)) {
+        mVerticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        mGridLayout->addItem(mVerticalSpacer, 1, 0, 1, 3);
+    }
+
+    if (ISNULL(mNotifyLabel) || ISNULL(mVerticalSpacer) ||
+        ISNULL(mPathLabel) || ISNULL(mPathEditor) ||
+        ISNULL(mSelectBtn) || ISNULL(mGridLayoutWidget) ||
+        ISNULL(mGridLayout)) {
         rc = NO_MEMORY;
     } else {
         rc = retranslateUi();
     }
 
     if (SUCCEED(rc)) {
-        gMW->resize(DEFAULT_UI_WIDTH, DEFAULT_UI_HEIGHT);
         gMW->setCentralWidget(mParent);
         QMetaObject::connectSlotsByName(gMW);
     }
@@ -92,16 +126,17 @@ int32_t DefaultUi::setupUi()
 
 int32_t DefaultUi::retranslateUi()
 {
-    mDefaultLabel->setText(QApplication::translate("MainWindow", "Wait for Connection ......", nullptr));
-    mDataPathLabel->setText(QApplication::translate("MainWindow", "Data Path:", nullptr));
-    mSelectButton->setText(QApplication::translate("MainWindow", "Select...", nullptr));
+    mPathLabel->setText(QApplication::translate("MainWindow", "Data Path:", nullptr));
+    mSelectBtn->setText(QApplication::translate("MainWindow", "Select ...", nullptr));
+    mNotifyLabel->setText(QApplication::translate("MainWindow", "Wait for Connection ......", nullptr));
 
     return NO_ERROR;
 }
 
 QSize DefaultUi::getSize()
 {
-    return QSize(DEFAULT_UI_WIDTH, DEFAULT_UI_HEIGHT);
+    return QSize(DEFAULT_UI_WIDTH + 2 * DEFAULT_UI_LEFT_MARGIN,
+        DEFAULT_UI_HEIGHT + 2 * DEFAULT_UI_TOP_MARGIN);
 }
 
 }

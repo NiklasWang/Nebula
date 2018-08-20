@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>580</width>
-    <height>183</height>
+    <width>540</width>
+    <height>185</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>558</width>
+      <width>521</width>
       <height>121</height>
      </rect>
     </property>
@@ -79,7 +79,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Please Connect Devices ......</string>
+        <string>Wait for Connection ......</string>
        </property>
       </widget>
      </item>
@@ -104,7 +104,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>580</width>
+     <width>540</width>
      <height>21</height>
     </rect>
    </property>

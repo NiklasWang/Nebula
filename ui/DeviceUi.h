@@ -6,7 +6,6 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QMainWindow>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
@@ -29,21 +28,25 @@ private:
     QString mName;
 
 private:
-    QMainWindow *mMainWindow;
     QWidget     *mParent;
+    static int32_t kCount;
+    static QWidget     *kHorizontalLayoutWidget;
+    static QHBoxLayout *kHorizontalLayout;
+
+private:
     QGroupBox   *mGroupBox;
     QWidget     *mGridLayoutWidget;
     QGridLayout *mGridLayout;
-    QLabel *mPictureLabel0;
-    QLabel *mTextLabel0;
-    QLabel *mPictureLabel1;
-    QLabel *mTextLabel1;
-    QLabel *mPictureLabel2;
-    QLabel *mTextLabel2;
-    QLabel *mPictureLabel3;
-    QLabel *mTextLabel3;
-    QLabel *mResultLabel;
-    QTextEdit *mDebugEditor;
+    QLabel      *mPicture0;
+    QLabel      *mText0;
+    QLabel      *mPicture1;
+    QLabel      *mText1;
+    QLabel      *mPicture2;
+    QLabel      *mText2;
+    QLabel      *mPicture3;
+    QLabel      *mText3;
+    QLabel      *mResult;
+    QTextEdit   *mDebugEditor;
 };
 
 }

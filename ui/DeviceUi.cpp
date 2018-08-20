@@ -1,10 +1,18 @@
 #include "utils/common.h"
 #include "core/common.h"
-#include "core/MainWindow.h"
 #include "DeviceUi.h"
 #include "ui/UiLayout.h"
 
+#define DEFAULT_UI_WIDTH  931
+#define DEFAULT_UI_HEIGHT 841
+#define DEFAULT_UI_LEFT_MARGIN 10
+#define DEFAULT_UI_TOP_MARGIN  10
+
 namespace nebula {
+
+int32_t      DeviceUi::kCount = 0;
+QWidget     *DeviceUi::kHorizontalLayoutWidget = nullptr;
+QHBoxLayout *DeviceUi::kHorizontalLayout = nullptr;
 
 DeviceUi::DeviceUi(QWidget *parent, QString &name, int32_t id) :
     mId(id),
@@ -13,34 +21,31 @@ DeviceUi::DeviceUi(QWidget *parent, QString &name, int32_t id) :
     mGroupBox(nullptr),
     mGridLayoutWidget(nullptr),
     mGridLayout(nullptr),
-    mPictureLabel0(nullptr),
-    mTextLabel0(nullptr),
-    mPictureLabel1(nullptr),
-    mTextLabel1(nullptr),
-    mPictureLabel2(nullptr),
-    mTextLabel2(nullptr),
-    mPictureLabel3(nullptr),
-    mTextLabel3(nullptr),
-    mResultLabel(nullptr),
+    mPicture0(nullptr),
+    mText0(nullptr),
+    mPicture1(nullptr),
+    mText1(nullptr),
+    mPicture2(nullptr),
+    mText2(nullptr),
+    mPicture3(nullptr),
+    mText3(nullptr),
+    mResult(nullptr),
     mDebugEditor(nullptr)
 {
+    kCount++;
 }
 
 DeviceUi::~DeviceUi()
 {
-    mDebugEditor->deleteLater();
-    mResultLabel->deleteLater();
-    mPictureLabel3->deleteLater();
-    mTextLabel3->deleteLater();
-    mPictureLabel2->deleteLater();
-    mTextLabel2->deleteLater();
-    mPictureLabel1->deleteLater();
-    mTextLabel1->deleteLater();
-    mPictureLabel0->deleteLater();
-    mTextLabel0->deleteLater();
-    mGridLayout->deleteLater();
-    mGridLayoutWidget->deleteLater();
+    kCount--;
+    mGroupBox->setParent(nullptr);
     mGroupBox->deleteLater();
+    if (kCount == 0) {
+        kHorizontalLayoutWidget->setParent(nullptr);
+        kHorizontalLayoutWidget->deleteLater();
+        kHorizontalLayoutWidget = nullptr;
+        kHorizontalLayout = nullptr;
+    }
 }
 
 int32_t DeviceUi::setupUi()

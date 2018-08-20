@@ -1,5 +1,5 @@
 /********************************************************************************
-** Form generated from reading UI file 'default.ui'
+** Form generated from reading UI file 'Default.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.11.1
 **
@@ -41,12 +41,12 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(580, 183);
+        MainWindow->resize(540, 185);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         gridLayoutWidget = new QWidget(centralwidget);
         gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(10, 10, 558, 121));
+        gridLayoutWidget->setGeometry(QRect(10, 10, 521, 121));
         gridLayout = new QGridLayout(gridLayoutWidget);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -99,7 +99,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QStringLiteral("menubar"));
-        menubar->setGeometry(QRect(0, 0, 580, 21));
+        menubar->setGeometry(QRect(0, 0, 540, 21));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QStringLiteral("statusbar"));
@@ -115,7 +115,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
         mPathLabel->setText(QApplication::translate("MainWindow", "Data Path:", nullptr));
         mSelectBtn->setText(QApplication::translate("MainWindow", "Select ...", nullptr));
-        mNotifyLabel->setText(QApplication::translate("MainWindow", "Please Connect Devices ......", nullptr));
+        mNotifyLabel->setText(QApplication::translate("MainWindow", "Wait for Connection ......", nullptr));
     } // retranslateUi
 
 };
