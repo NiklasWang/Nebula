@@ -181,10 +181,11 @@ int32_t DeviceMonitor::addDevice(QString &name)
 
 int32_t DeviceMonitor::removeDevice(QString &name)
 {
-    int32_t rc = NOT_FOUND;
+    int32_t rc = NO_ERROR;
     DeviceControl *device = nullptr;
 
     if (SUCCEED(rc)) {
+        rc = NOT_FOUND;
         for (auto iter = mDevices.begin(); iter != mDevices.end(); iter++) {
             if ((*iter)->getName() == name) {
                 device = *iter;

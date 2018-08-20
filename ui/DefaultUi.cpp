@@ -6,13 +6,6 @@
 #include "ui/DefaultUi.h"
 #include "ui/UiLayout.h"
 
-#define DEFAULT_UI_WIDTH  521
-#define DEFAULT_UI_HEIGHT 121
-#define DEFAULT_UI_MENU_STATUS_HEIGHT 40
-#define DEFAULT_UI_LEFT_MARGIN 10
-#define DEFAULT_UI_TOP_MARGIN  10
-#define DEFAULT_UI_MENU_HEIGHT 21
-
 namespace nebula {
 
 DefaultUi::DefaultUi(QWidget *parent) :
@@ -23,7 +16,7 @@ DefaultUi::DefaultUi(QWidget *parent) :
     mVerticalSpacer(nullptr),
     mPathLabel(nullptr),
     mPathEditor(nullptr),
-    mSelectBtn(nullptr),
+    mSelectBtn(nullptr)
 {
 }
 
@@ -39,11 +32,12 @@ int32_t DefaultUi::setupUi()
 
     if (SUCCEED(rc)) {
         gMW->resize(DEFAULT_UI_WIDTH + 2 * DEFAULT_UI_LEFT_MARGIN,
-            DEFAULT_UI_HEIGHT + 2 * DEFAULT_UI_TOP_MARGIN + DEFAULT_UI_MENU_STATUS_HEIGHT);
+            DEFAULT_UI_HEIGHT + 2 * DEFAULT_UI_TOP_MARGIN +
+            DEFAULT_UI_MENU_HEIGHT + DEFAULT_UI_BAR_HEIGHT);
     }
 
     if (SUCCEED(rc)) {
-        mGridLayoutWidget = new QWidget(parent);
+        mGridLayoutWidget = new QWidget(mParent);
         mGridLayoutWidget->setObjectName(QStringLiteral("mGridLayoutWidget"));
         mGridLayoutWidget->setGeometry(QRect(
             DEFAULT_UI_LEFT_MARGIN, DEFAULT_UI_TOP_MARGIN,
