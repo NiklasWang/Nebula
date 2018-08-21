@@ -112,6 +112,7 @@ int32_t DefaultUi::setupUi()
 
     if (SUCCEED(rc)) {
         gMW->setCentralWidget(mParent);
+        mGridLayoutWidget->show();
         QMetaObject::connectSlotsByName(gMW);
     }
 

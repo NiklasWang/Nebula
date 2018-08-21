@@ -28,28 +28,36 @@ SOURCES += \
     utils/CQueue.cpp \
     utils/Semaphore.cpp \
     utils/SyncType.cpp \
+    utils/Timer.cpp \
+    utils/Time.cpp \
+    utils/SemaphoreTimeout.cpp \
     ui/DefaultUi.cpp \
     ui/MainWindowUi.cpp \
     ui/DeviceUi.cpp \
+    ui/Animation.cpp \
+    core/common.cpp \
     core/UiComposer.cpp \
     core/MainWindow.cpp \
     core/DeviceMonitor.cpp \
-    core/DeviceControl.cpp \
-    core/common.cpp
+    core/DeviceControl.cpp
 
 HEADERS += \
     version.h \
+    ui/Animation.h \
     ui/UiLayout.h \
     ui/DefaultUi.h \
     ui/MainWindowUi.h \
     ui/DeviceUi.h \
+    ui/AnimationDrawIntf.h \
     utils/clist.h \
     utils/common.h \
     utils/CQueue.h \
     utils/RWLock.h \
     utils/Semaphore.h \
     utils/SyncType.h \
-    utils/TimeEx.h \
+    utils/Time.h \
+    utils/Timer.h \
+    utils/SemaphoreTimeout.h \
     core/MainWindow.h \
     core/UiComposer.h \
     core/DeviceMonitor.h \

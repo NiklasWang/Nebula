@@ -16,12 +16,12 @@ MainWindowUi::MainWindowUi(QMainWindow *window) :
 
 MainWindowUi::~MainWindowUi()
 {
-    SECURE_DELETE(mActionExit);
-    SECURE_DELETE(mActionAbout);
-    SECURE_DELETE(mMenuFile);
-    SECURE_DELETE(mMenuHelp);
-    SECURE_DELETE(mMenuBar);
-    SECURE_DELETE(mStatusBar);
+    mActionExit->deleteLater();
+    mActionAbout->deleteLater();
+    mMenuFile->deleteLater();
+    mMenuHelp->deleteLater();
+    mMenuBar->deleteLater();
+    mStatusBar->deleteLater();
 }
 
 int32_t MainWindowUi::setupUi()
