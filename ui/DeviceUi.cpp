@@ -33,6 +33,8 @@ DeviceUi::DeviceUi(QWidget *parent, QString &name, int32_t id) :
     mResult(nullptr),
     mDebugEditor(nullptr)
 {
+    qRegisterMetaType<std::function<int32_t (int32_t)> >("std::function<int32_t (int32_t)>");
+
     connect(this, SIGNAL(drawUi(std::function<int32_t (int32_t)>, int32_t)),
             this, SLOT(onDrawUi(std::function<int32_t (int32_t)>, int32_t)),
             Qt::BlockingQueuedConnection);
@@ -414,7 +416,7 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
 
 int32_t DeviceUi::drawAnimation(int32_t frameId)
 {
-    return drawUi(
+    int32_t rc = drawUi(
         [this](int32_t id) -> int32_t {
             int32_t _rc = drawAnimationUi(id);
             if (!SUCCEED(_rc)) {
@@ -424,6 +426,8 @@ int32_t DeviceUi::drawAnimation(int32_t frameId)
         },
         frameId
     );
+
+    return NO_ERROR;
 }
 
 int32_t DeviceUi::kOpacityRange[] = {
