@@ -244,6 +244,10 @@ int32_t DeviceUi::removeUi()
     }
 
     if (SUCCEED(rc)) {
+        mAnimation.stop();
+    }
+
+    if (SUCCEED(rc)) {
         if (kCount) {
             QRect rect = kHorizontalLayoutWidget->geometry();
             layoutW = rect.width() - DEVICE_UI_WIDTH;

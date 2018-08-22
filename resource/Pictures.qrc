@@ -3,5 +3,8 @@
         <file alias="FailedIcon">FailedIcon_e25b68.png</file>
         <file alias="QuestionIcon">QuestionIcon_ffc000.png</file>
         <file alias="SucceedIcon">SucceedIcon_3dbb93.png</file>
+        <file alias="IconColor_16x9">Icon_Splash_of_Color_2496x1404_16x9.jpg</file>
+        <file alias="IconColor_16x10">Icon_Splash_of_Color_2560x1600_16x10.jpg</file>
+        <file alias="IconColor_4x3">Icon_Splash_of_Color_2560x1920_4x3.jpg</file>
     </qresource>
 </RCC>

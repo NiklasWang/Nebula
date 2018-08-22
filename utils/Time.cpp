@@ -37,7 +37,7 @@ bool Ms::operator==(const Ms &rhs)
 
 bool Ms::operator!=(const Ms &rhs)
 {
-    return *this != rhs;
+    return !(*this == rhs);
 }
 
 Ms &Ms::operator=(const Ms &rhs)

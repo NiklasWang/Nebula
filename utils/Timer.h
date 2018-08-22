@@ -20,6 +20,7 @@ public:
 
 public:
     Timer(QString name = "default");
+    virtual ~Timer();
 
 protected:
     void run() override;
@@ -27,6 +28,7 @@ protected:
 private:
     QString mName;
     bool    mExit;
+    bool    mDebug;
     SemaphoreTimeout *mSem;
     Ms      mMs;
     std::function<int32_t ()> mFunc;
