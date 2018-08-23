@@ -14,6 +14,7 @@ public:
     int32_t start();
     int32_t stop();
     int32_t draw();
+    QString name();
 
 public:
     Animation(AnimationDrawIntf *intf, QString name);

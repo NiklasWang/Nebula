@@ -32,6 +32,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
 {
     int32_t rc = NO_ERROR;
     DeviceUi *ui = nullptr;
+    Animation *animation = nullptr;
     bool removeDefaultUi = false;
 
     if (SUCCEED(rc)) {
@@ -54,6 +55,15 @@ int32_t UiComposer::onDeviceAttached(QString &name)
             mBaseWidget, name, mDeviceUi.size());
         if (ISNULL(ui)) {
             showError("Failed to create device ui.");
+            rc = NO_MEMORY;
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        animation = new Animation(this, name);
+        if (ISNULL(animation)) {
+            showError("Failed to create device animation.");
+            rc = NO_MEMORY;
         }
     }
 
@@ -84,6 +94,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
         );
         if (SUCCEED(rc)) {
             mDeviceUi.push_back(ui);
+            mAnimation.push_back(animation);
         }
     }
 
@@ -102,6 +113,19 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
             if ((*iter)->getName() == name) {
                 ui = *iter;
                 iter = mDeviceUi.erase(iter);
+                break;
+            }
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        for (auto iter = mAnimation.begin();
+             iter != mAnimation.end(); iter++) {
+            if ((*iter)->name() == name) {
+                Animation *animation = *iter;
+                animation->stop();
+                SECURE_DELETE(animation);
+                iter = mAnimation.erase(iter);
                 break;
             }
         }
@@ -151,6 +175,40 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
                 return _rc;
             }
         );
+    }
+
+    return rc;
+}
+
+int32_t UiComposer::drawAnimation(QString name, int32_t frameId)
+{
+    return drawAnimationFrame(name, frameId);
+}
+
+int32_t UiComposer::onDrawAnimationFrame(QString name, int32_t frameId)
+{
+    int32_t rc = NO_ERROR;
+    DeviceUi *ui = nullptr;
+
+    if (SUCCEED(rc)) {
+        for (auto iter = mDeviceUi.begin();
+             iter != mDeviceUi.end(); iter++) {
+            if ((*iter)->getName() == name) {
+                ui = *iter;
+                break;
+            }
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        if (NOTNULL(ui)) {
+            rc = ui->drawAnimation(frameId);
+            if (!SUCCEED(rc)) {
+                showError("Failed to draw animation");
+            }
+        } else {
+            showError("Failed to find animation painter");
+        }
     }
 
     return rc;

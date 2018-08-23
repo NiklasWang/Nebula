@@ -1,6 +1,6 @@
 #include "utils/common.h"
 #include "core/common.h"
-#include "Animation.h"
+#include "ui/Animation.h"
 
 namespace nebula {
 
@@ -36,7 +36,7 @@ int32_t Animation::draw()
     }
 
     if (SUCCEED(rc)) {
-        rc = mIntf->drawAnimation(mFrameId++);
+        rc = mIntf->drawAnimation(name(), mFrameId++);
         if (!SUCCEED(rc)) {
             showError("Failed to draw animation.");
         }
@@ -51,6 +51,11 @@ Animation::Animation(AnimationDrawIntf *intf, QString name) :
     mFrameId(0),
     mIntf(intf)
 {
+}
+
+QString Animation::name()
+{
+    return mName;
 }
 
 }

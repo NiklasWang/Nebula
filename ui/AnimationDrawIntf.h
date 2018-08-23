@@ -8,7 +8,7 @@ namespace nebula {
 class AnimationDrawIntf
 {
 public:
-    virtual drawAnimation(int32_t frameId) = 0;
+    virtual drawAnimation(QString name, int32_t frameId) = 0;
     virtual ~AnimationDrawIntf() {}
 };
 

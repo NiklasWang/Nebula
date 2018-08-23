@@ -25,8 +25,7 @@ enum DeviceUiType {
 };
 
 class DeviceUi :
-    public QObject,
-    public AnimationDrawIntf
+    public QObject
 {
     Q_OBJECT
 
@@ -35,7 +34,7 @@ public:
     int32_t removeUi();
     int32_t update(DeviceUiType type, bool result);
     int32_t debug(QString &str);
-    int32_t retranslateUi();
+    int32_t drawAnimation(int32_t frameId);
 
     QString getName();
     QSize getSize();
@@ -44,22 +43,14 @@ public:
     explicit DeviceUi(QWidget *parent, QString &name, int32_t id);
     virtual ~DeviceUi();
 
-protected:
-    int32_t drawAnimation(int32_t frameId) override;
-    int32_t drawAnimationUi(int32_t frameId);
-
-signals:
-    int32_t drawUi(std::function<int32_t (int32_t)> func, int32_t id);
-
-private slots:
-    int32_t onDrawUi(std::function<int32_t (int32_t)> func, int32_t id);
+private:
+    int32_t retranslateUi();
 
 private:
     bool    mConstructed;
     int32_t mId;
     QString mName;
     int32_t mStep;
-    Animation mAnimation;
 
 private:
     QWidget     *mParent;
@@ -86,4 +77,4 @@ private:
 
 }
 
-#endif // DEVICEUI_H
+#endif

@@ -17,7 +17,6 @@ DeviceUi::DeviceUi(QWidget *parent, QString &name, int32_t id) :
     mId(id),
     mName(name),
     mStep(1),
-    mAnimation(this, name),
     mParent(parent),
     mGroupBox(nullptr),
     mGridLayoutWidget(nullptr),
@@ -33,11 +32,6 @@ DeviceUi::DeviceUi(QWidget *parent, QString &name, int32_t id) :
     mResult(nullptr),
     mDebugEditor(nullptr)
 {
-    qRegisterMetaType<std::function<int32_t (int32_t)> >("std::function<int32_t (int32_t)>");
-
-    connect(this, SIGNAL(drawUi(std::function<int32_t (int32_t)>, int32_t)),
-            this, SLOT(onDrawUi(std::function<int32_t (int32_t)>, int32_t)),
-            Qt::BlockingQueuedConnection);
 }
 
 DeviceUi::~DeviceUi()
@@ -221,10 +215,6 @@ int32_t DeviceUi::setupUi()
     }
 
     if (SUCCEED(rc)) {
-        mAnimation.start();
-    }
-
-    if (SUCCEED(rc)) {
         mConstructed = true;
     }
 
@@ -243,10 +233,6 @@ int32_t DeviceUi::removeUi()
         } else {
             kCount--;
         }
-    }
-
-    if (SUCCEED(rc)) {
-        mAnimation.stop();
     }
 
     if (SUCCEED(rc)) {
@@ -363,12 +349,10 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
                 picture = mPicture3;
                 text = mText3;
                 mStep = 4;
-                mAnimation.stop();
             } break;
             case DEVICE_UI_TYPE_MAX_INVALID:
             default: {
                 mStep = 4;
-                mAnimation.stop();
                 rc = PARAM_INVALID;
             } break;
         }
@@ -407,34 +391,17 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
                 mResult->setText("FAILED");
                 mResult->setStyleSheet("background-color:red");
             }
-            mAnimation.stop();
         }
     }
 
     return rc;
 }
 
-int32_t DeviceUi::drawAnimation(int32_t frameId)
-{
-    int32_t rc = drawUi(
-        [this](int32_t id) -> int32_t {
-            int32_t _rc = drawAnimationUi(id);
-            if (!SUCCEED(_rc)) {
-                showError("Failed to draw animation");
-            }
-            return _rc;
-        },
-        frameId
-    );
-
-    return NO_ERROR;
-}
-
 int32_t DeviceUi::kOpacityRange[] = {
     10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 };
 
-int32_t DeviceUi::drawAnimationUi(int32_t frameId)
+int32_t DeviceUi::drawAnimation(int32_t frameId)
 {
     int32_t rc = NO_ERROR;
     QLabel *picture = nullptr;
@@ -457,6 +424,7 @@ int32_t DeviceUi::drawAnimationUi(int32_t frameId)
             case 4: {
                 picture = mPicture3;
                 text = mText3;
+                rc = NOT_REQUIRED;
             } break;
             default: {
                 rc = PARAM_INVALID;
@@ -481,12 +449,7 @@ int32_t DeviceUi::drawAnimationUi(int32_t frameId)
         }
     }
 
-    return rc;
-}
-
-int32_t DeviceUi::onDrawUi(std::function<int32_t (int32_t)> func, int32_t id)
-{
-    return func(id);
+    return RETURNIGNORE(rc, NOT_REQUIRED);
 }
 
 int32_t DeviceUi::debug(QString &str)
