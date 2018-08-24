@@ -27,10 +27,10 @@ SOURCES += \
     main.cpp \
     utils/CQueue.cpp \
     utils/Semaphore.cpp \
+    utils/TimedSemaphore.cpp \
     utils/SyncType.cpp \
     utils/Timer.cpp \
     utils/Time.cpp \
-    utils/SemaphoreTimeout.cpp \
     ui/DefaultUi.cpp \
     ui/MainWindowUi.cpp \
     ui/DeviceUi.cpp \
@@ -54,10 +54,10 @@ HEADERS += \
     utils/CQueue.h \
     utils/RWLock.h \
     utils/Semaphore.h \
+    utils/TimedSemaphore.h \
     utils/SyncType.h \
     utils/Time.h \
     utils/Timer.h \
-    utils/SemaphoreTimeout.h \
     core/MainWindow.h \
     core/UiComposer.h \
     core/DeviceMonitor.h \

@@ -14,7 +14,7 @@ Timer::Timer(QString name) :
     mName(name),
     mExit(false),
     mDebug(!!(DEBUG_MODE_ON)),
-    mSem(nullptr),
+    mTimedSem(nullptr),
     mMs(0)
 {
 }
@@ -40,19 +40,29 @@ int32_t Timer::startNow(Ms ms, std::function<int32_t ()> func)
     if (SUCCEED(rc)) {
         mMs = ms;
         mFunc = func;
-        mSem = new SemaphoreTimeout(ms());
-        if (ISNULL(mSem)) {
-            showError("Failed to create semaphore timed.");
-            rc = NO_MEMORY;
+        if (NOTNULL(mTimedSem)) {
+            if (ms != mTimedSem->time()) {
+                mTimedSem->signal();
+                SECURE_DELETE(mTimedSem);
+            }
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        if (ISNULL(mTimedSem)) {
+            mTimedSem = new TimedSemaphore(ms());
+            if (ISNULL(mTimedSem)) {
+                showError("Failed to create semaphore timed.");
+                rc = NO_MEMORY;
+            }
         }
     }
 
     if (SUCCEED(rc)) {
         if (!isRunning()) {
             start();
-        } else {
-            showError("Timer " + mName + " already started.");
         }
+        mSem.signal();
     }
 
     return NO_ERROR;
@@ -66,19 +76,36 @@ int32_t Timer::startNow(Sec sec, std::function<int32_t ()> func)
 int32_t Timer::stopNow()
 {
     mExit = true;
-    if (NOTNULL(mSem)) {
-        mSem->signal();
+    if (NOTNULL(mTimedSem)) {
+        mTimedSem->signal();
     }
+    mSem.signal();
 
     return NO_ERROR;
 }
 
 void Timer::run()
 {
+    do {
+        if (mExit) {
+            break;
+        }
+
+        mSem.wait();
+        if (mExit) {
+            break;
+        } else {
+            runTimer();
+        }
+    } while (!mExit);
+}
+
+int32_t Timer::runTimer()
+{
     int32_t rc = NO_ERROR;
 
     if (!mExit) {
-        if (mMs != 0 && NOTNULL(mSem)) {
+        if (mMs != 0 && NOTNULL(mTimedSem)) {
             if (mDebug) {
                 QDateTime dataTime = QDateTime::currentDateTime();
                 QString time = dataTime.toString("hh:mm:ss.zzz");
@@ -86,8 +113,7 @@ void Timer::run()
                           << mMs() << "ms, "
                           << "current time is " << time;
             }
-            delayMs(30);
-            rc = mSem->wait();
+            rc = mTimedSem->wait();
             if (mDebug) {
                 QDateTime dataTime = QDateTime::currentDateTime();
                 QString time = dataTime.toString("hh:mm:ss.zzz");
@@ -99,10 +125,12 @@ void Timer::run()
     }
 
     if (!SUCCEED(rc)) {
-        SECURE_DELETE(mSem);
-        mSem = nullptr;
+        SECURE_DELETE(mTimedSem);
+        mTimedSem = nullptr;
         mFunc();
     }
+
+    return rc;
 }
 
 }

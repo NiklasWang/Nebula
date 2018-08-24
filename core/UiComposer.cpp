@@ -19,6 +19,10 @@ UiComposer::UiComposer(QMainWindow *window) :
     connect(this, SIGNAL(drawUi(std::function<int32_t ()>)),
             this, SLOT(onDrawUi(std::function<int32_t ()>)),
             Qt::BlockingQueuedConnection);
+
+    connect(this, SIGNAL(drawAnimationFrame(QString, int32_t)),
+            this, SLOT(onDrawAnimationFrame(QString, int32_t)),
+            Qt::BlockingQueuedConnection);
 }
 
 UiComposer::~UiComposer()
@@ -94,6 +98,7 @@ int32_t UiComposer::onDeviceAttached(QString &name)
         );
         if (SUCCEED(rc)) {
             mDeviceUi.push_back(ui);
+            animation->start();
             mAnimation.push_back(animation);
         }
     }
@@ -182,7 +187,27 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
 
 int32_t UiComposer::drawAnimation(QString name, int32_t frameId)
 {
-    return drawAnimationFrame(name, frameId);
+    int32_t rc = NO_ERROR;
+
+    if (SUCCEED(rc)) {
+        rc = drawAnimationFrame(name, frameId);
+        if (!SUCCEED(rc)) {
+            showError("Failed to draw animation frame");
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        for (auto iter = mAnimation.begin();
+             iter != mAnimation.end(); iter++) {
+            if ((*iter)->name() == name) {
+                Animation *animation = *iter;
+                animation->start();
+                break;
+            }
+        }
+    }
+
+    return rc;
 }
 
 int32_t UiComposer::onDrawAnimationFrame(QString name, int32_t frameId)

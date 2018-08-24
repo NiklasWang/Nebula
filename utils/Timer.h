@@ -6,7 +6,8 @@
 #include <QString>
 
 #include "utils/Time.h"
-#include "utils/SemaphoreTimeout.h"
+#include "utils/Semaphore.h"
+#include "utils/TimedSemaphore.h"
 
 namespace nebula {
 
@@ -26,11 +27,15 @@ protected:
     void run() override;
 
 private:
+    int32_t runTimer();
+
+private:
     QString mName;
     bool    mExit;
     bool    mDebug;
-    SemaphoreTimeout *mSem;
-    Ms      mMs;
+    Semaphore mSem;
+    TimedSemaphore *mTimedSem;
+    Ms mMs;
     std::function<int32_t ()> mFunc;
 };
 
