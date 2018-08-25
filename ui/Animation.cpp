@@ -21,7 +21,7 @@ int32_t Animation::start()
 
 int32_t Animation::stop()
 {
-    return mTimer.stopNow();
+    return mTimer.exitNow();
 }
 
 int32_t Animation::draw()
@@ -51,6 +51,11 @@ Animation::Animation(AnimationDrawIntf *intf, QString name) :
     mFrameId(0),
     mIntf(intf)
 {
+}
+
+Animation::~Animation()
+{
+    mTimer.stopNow();
 }
 
 QString Animation::name()

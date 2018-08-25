@@ -1,7 +1,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#define ANIMATION_EVERY_FRAME_TIME 30 // ms
+#define ANIMATION_EVERY_FRAME_TIME 45 // ms
 
 #include "utils/Timer.h"
 #include "ui/AnimationDrawIntf.h"
@@ -18,6 +18,7 @@ public:
 
 public:
     Animation(AnimationDrawIntf *intf, QString name);
+    ~Animation();
 
 private:
     QString mName;

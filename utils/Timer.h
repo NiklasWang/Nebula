@@ -18,6 +18,7 @@ public:
     int32_t startNow(Ms ms, std::function<int32_t ()> func);
     int32_t startNow(Sec sec, std::function<int32_t ()> func);
     int32_t stopNow();
+    int32_t exitNow();
 
 public:
     Timer(QString name = "default");

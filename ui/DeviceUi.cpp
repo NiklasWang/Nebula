@@ -445,6 +445,7 @@ int32_t DeviceUi::drawAnimation(int32_t frameId)
             effect.setOpacity(value * 1.0f / 10);
             picture->setGraphicsEffect(&effect);
             picture->setPixmap(fitPixmap);
+            picture->repaint();
             text = nullptr;
         }
     }

@@ -302,7 +302,16 @@ int32_t UiComposer::destruct()
     }
 
     if (SUCCEED(rc)) {
-        while(mDeviceUi.begin() != mDeviceUi.end()) {
+        while (mAnimation.begin() != mAnimation.end()) {
+            Animation *animation = *mAnimation.begin();
+            animation->stop();
+            SECURE_DELETE(animation);
+            mAnimation.erase(mAnimation.begin());
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        while (mDeviceUi.begin() != mDeviceUi.end()) {
             DeviceUi *ui = *mDeviceUi.begin();
             SECURE_DELETE(ui);
             mDeviceUi.erase(mDeviceUi.begin());

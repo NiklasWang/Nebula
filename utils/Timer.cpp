@@ -6,7 +6,7 @@
 #include "utils/Time.h"
 #include "utils/Timer.h"
 
-#define DEBUG_MODE_ON 1
+#define DEBUG_MODE_ON 0
 
 namespace nebula {
 
@@ -21,9 +21,9 @@ Timer::Timer(QString name) :
 
 Timer::~Timer()
 {
-    stopNow();
-    quit();
-    wait();
+    if (!mExit) {
+        exit();
+    }
 }
 
 int32_t Timer::startNow(Ms ms, std::function<int32_t ()> func)
@@ -75,11 +75,22 @@ int32_t Timer::startNow(Sec sec, std::function<int32_t ()> func)
 
 int32_t Timer::stopNow()
 {
+    if (NOTNULL(mTimedSem)) {
+        mTimedSem->signal();
+    }
+
+    return NO_ERROR;
+}
+
+int32_t Timer::exitNow()
+{
     mExit = true;
     if (NOTNULL(mTimedSem)) {
         mTimedSem->signal();
     }
     mSem.signal();
+    quit();
+    wait();
 
     return NO_ERROR;
 }
