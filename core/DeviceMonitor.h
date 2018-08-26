@@ -13,6 +13,8 @@ namespace nebula {
 class DeviceMonitor :
     public QThread
 {
+    Q_OBJECT
+
 public:
     int32_t startMonitor();
     int32_t exitMonitor();
@@ -31,7 +33,11 @@ private:
 protected:
     void run() override;
 
+public slots:
+    void onNewPathSelected(QString path);
+
 private:
+    QString     mPath;
     bool        mExit;
     Semaphore   mExitSem;
     int32_t     mLoopCnt;

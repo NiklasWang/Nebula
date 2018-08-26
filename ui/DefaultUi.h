@@ -11,8 +11,11 @@
 
 namespace nebula {
 
-class DefaultUi
+class DefaultUi :
+    public QObject
 {
+    Q_OBJECT
+
 public:
     int32_t setupUi();
     int32_t retranslateUi();
@@ -21,6 +24,12 @@ public:
 public:
     explicit DefaultUi(QWidget *parent);
     ~DefaultUi();
+
+signals:
+    void newPathSelected(QString path);
+
+private slots:
+    void on_select_btn_clicked();
 
 private:
     QWidget     *mParent;
@@ -35,4 +44,4 @@ private:
 
 }
 
-#endif // UIDEFAULT_H
+#endif

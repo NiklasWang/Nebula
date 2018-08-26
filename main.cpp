@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     int32_t rc = NO_ERROR;
     QApplication a(argc, argv);
-    nebula::MainWindow w;
+    nebula::MainWindow w(&a, nullptr);
 
     rc = w.construct();
     if (SUCCEED(rc)) {

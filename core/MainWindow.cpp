@@ -8,9 +8,11 @@ namespace nebula {
 
 MainWindow *gMW = nullptr;
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QApplication *app, QWidget *parent) :
     QMainWindow(parent),
     mConstructed(false),
+    mApp(app),
+    mParent(parent),
     mUi(nullptr),
     mMonitor(nullptr)
 {
@@ -53,6 +55,9 @@ int32_t MainWindow::construct()
         mMonitor = new DeviceMonitor(mUi);
         if (ISNULL(mMonitor)) {
             showError("Failed to create ui composer.");
+        } else {
+            connect(this,     SIGNAL(newPathSelected(QString)),
+                    mMonitor, SLOT(onNewPathSelected(QString)));
         }
     }
 
@@ -132,6 +137,17 @@ int32_t MainWindow::onDialogShow(MessageType type, const QString msg)
     }
 
     return btn;
+}
+
+QString MainWindow::getPath()
+{
+    QString result = "";
+
+    if (NOTNULL(mApp)) {
+        result = mApp->applicationDirPath();
+    }
+
+    return result;
 }
 
 }

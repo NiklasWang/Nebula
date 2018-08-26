@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <iostream>
 
+#include <QDebug>
+
 #include "version.h"
 
 enum err_raeson {

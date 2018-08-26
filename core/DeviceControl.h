@@ -9,6 +9,7 @@ class DeviceControl
 {
 public:
     QString getName();
+    void onNewPathSelected(QString path);
 
 public:
     explicit DeviceControl(QString &name);
@@ -18,6 +19,7 @@ public:
 
 private:
     QString mName;
+    QString mPath;
 };
 
 }

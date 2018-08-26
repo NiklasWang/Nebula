@@ -1,4 +1,5 @@
 #include "utils/common.h"
+#include "core/common.h"
 #include "DeviceControl.h"
 
 namespace nebula {
@@ -29,6 +30,11 @@ int32_t DeviceControl::destruct()
     int32_t rc = NO_ERROR;
 
     return rc;
+}
+
+void DeviceControl::onNewPathSelected(QString path)
+{
+    mPath = path;
 }
 
 }

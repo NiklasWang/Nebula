@@ -4,6 +4,7 @@
 #include "utils/Time.h"
 #include "core/common.h"
 #include "core/CmdPrefix.h"
+#include "core/MainWindow.h"
 #include "core/DeviceMonitor.h"
 
 namespace nebula {
@@ -13,6 +14,7 @@ DeviceMonitor::DeviceMonitor(UiComposer *ui) :
     mLoopCnt(0),
     mUi(ui)
 {
+    mPath = gMW->getPath();
 }
 
 DeviceMonitor::~DeviceMonitor()
@@ -165,6 +167,7 @@ int32_t DeviceMonitor::addDevice(QString &name)
         if (!SUCCEED(rc)) {
             showError("Failed to construct device " + name);
         } else {
+            device->onNewPathSelected(mPath);
             mDevices.push_back(device);
         }
     }
@@ -212,6 +215,14 @@ int32_t DeviceMonitor::removeDevice(QString &name)
     }
 
     return rc;
+}
+
+void DeviceMonitor::onNewPathSelected(QString path)
+{
+    mPath = path;
+    for (auto iter : mDevices) {
+        iter->onNewPathSelected(path);
+    }
 }
 
 }

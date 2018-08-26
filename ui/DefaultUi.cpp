@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QFileDialog>
 
 #include "utils/common.h"
 #include "core/common.h"
@@ -116,6 +117,14 @@ int32_t DefaultUi::setupUi()
         QMetaObject::connectSlotsByName(gMW);
     }
 
+    if (SUCCEED(rc)) {
+        connect(mSelectBtn, SIGNAL(clicked()),
+                this,       SLOT(on_select_btn_clicked()));
+
+        connect(this, SIGNAL(newPathSelected(QString)),
+                gMW,  SIGNAL(newPathSelected(QString)));
+    }
+
     return rc;
 }
 
@@ -123,6 +132,8 @@ int32_t DefaultUi::retranslateUi()
 {
     mPathLabel->setText(QApplication::translate("MainWindow", "Data Path:", nullptr));
     mSelectBtn->setText(QApplication::translate("MainWindow", "Select ...", nullptr));
+    QString path = gMW->getPath();
+    mPathEditor->setText(QApplication::translate("MainWindow", path.toLocal8Bit().data(), nullptr));
     mNotifyLabel->setText(QApplication::translate("MainWindow", "Wait for Connection ......", nullptr));
 
     return NO_ERROR;
@@ -132,6 +143,16 @@ QSize DefaultUi::getSize()
 {
     return QSize(DEFAULT_UI_WIDTH + 2 * DEFAULT_UI_LEFT_MARGIN,
         DEFAULT_UI_HEIGHT + 2 * DEFAULT_UI_TOP_MARGIN);
+}
+
+void DefaultUi::on_select_btn_clicked()
+{
+    QString old = gMW->getPath();
+    QString path = QFileDialog::getExistingDirectory(mParent,
+        "Choose Path Directory", old.toLocal8Bit().data(),
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    mPathEditor->setText(QApplication::translate("MainWindow", path.toLocal8Bit().data(), nullptr));
+    newPathSelected(path);
 }
 
 }
