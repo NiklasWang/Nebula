@@ -22,6 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+BUILD_WITH_EMULATOR = y
 
 SOURCES += \
     main.cpp \
@@ -35,14 +36,15 @@ SOURCES += \
     ui/MainWindowUi.cpp \
     ui/DeviceUi.cpp \
     ui/Animation.cpp \
+    algorithm/Algorithm.cpp \
+    algorithm/EmulatorEngine.cpp \
+    algorithm/VerificationEngine.cpp \
+    algorithm/AlgorithmHelper.cpp \
     core/common.cpp \
     core/UiComposer.cpp \
     core/MainWindow.cpp \
     core/DeviceMonitor.cpp \
-    core/DeviceControl.cpp \
-    algorithm/Algorithm.cpp \
-    algorithm/EmulatorEngine.cpp \
-    algorithm/VerificationEngine.cpp
+    core/DeviceControl.cpp
 
 HEADERS += \
     version.h \
@@ -61,17 +63,30 @@ HEADERS += \
     utils/SyncType.h \
     utils/Time.h \
     utils/Timer.h \
+    algorithm/Interface.h \
+    algorithm/Algorithm.h \
+    algorithm/EmulatorEngine.h \
+    algorithm/VerificationEngine.h \
+    algorithm/Config.h \
+    algorithm/AlgorithmHelper.h \
     core/MainWindow.h \
     core/UiComposer.h \
     core/DeviceMonitor.h \
     core/DeviceControl.h \
     core/CmdPrefix.h \
-    core/common.h \
-    algorithm/Interface.h \
-    algorithm/Algorithm.h \
-    algorithm/EmulatorEngine.h \
-    algorithm/VerificationEngine.h \
-    algorithm/Config.h
+    core/common.h
+
+
+!contains(BUILD_WITH_EMULATOR, y) {
+HEADERS += \
+    external/inc/arcsoft_module_errorcommon.h \
+    external/inc/arcsoft_verification.h \
+    external/inc/platform/amcomdef.h \
+    external/inc/platform/asvloffscreen.h \
+    external/inc/platform/merror.h
+
+    message("Build with real algorithm")
+}
 
 FORMS += \
     designer/LegacyDefault.ui \

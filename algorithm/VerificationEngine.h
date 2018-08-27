@@ -1,6 +1,8 @@
 #ifndef VERIFICATIONENGINE_H
 #define VERIFICATIONENGINE_H
 
+#include <QString>
+
 #include "algorithm/Interface.h"
 
 namespace nebula {
@@ -13,13 +15,15 @@ public:
         int32_t h;
         int32_t stride;
         int32_t scanline;
+        int32_t size;
     };
 
 public:
-    Yuv420sp *main;
-    Yuv420sp *sub;
+    Yuv420sp main;
+    Yuv420sp sub;
     int8_t *otp;
     int32_t size;
+    QString name;
 };
 
 class VerificationEngine :
@@ -37,6 +41,10 @@ public:
 public:
     VerificationEngine();
     virtual ~VerificationEngine();
+
+private:
+    ParmType mParm;
+    void    *mEngine;
 };
 
 }

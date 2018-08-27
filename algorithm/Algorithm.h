@@ -2,6 +2,7 @@
 #define VERIFICATION_H
 
 #include <QString>
+#include <QFile>
 
 #include "algorithm/Config.h"
 #include "algorithm/Interface.h"
@@ -18,13 +19,28 @@ public:
     int32_t set(void *parm) override;
 
 public:
-    explicit Algorithm(QString path);
+    explicit Algorithm(QString path, QString name);
     virtual ~Algorithm();
 
 private:
-    QString mPath;
+    enum FileType {
+        FILE_TYPE_OTP,
+        FILE_TYPE_MAIN,
+        FILE_TYPE_SUB,
+        FILE_TYPE_MAX_INVALID
+    };
+
+    struct MemoryMap {
+        uint8_t *dat;
+        int32_t size;
+    };
+
+private:
+    QString    mPath;
+    QString    mName;
     AlgorithmInterface *mAlg;
-    QList<QFile  *>     mFiles;
+    QFile     *mFiles[FILE_TYPE_MAX_INVALID];
+    MemoryMap mMemMap[FILE_TYPE_MAX_INVALID];
 };
 
 }
