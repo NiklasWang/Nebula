@@ -39,7 +39,10 @@ SOURCES += \
     core/UiComposer.cpp \
     core/MainWindow.cpp \
     core/DeviceMonitor.cpp \
-    core/DeviceControl.cpp
+    core/DeviceControl.cpp \
+    algorithm/Algorithm.cpp \
+    algorithm/EmulatorEngine.cpp \
+    algorithm/VerificationEngine.cpp
 
 HEADERS += \
     version.h \
@@ -63,7 +66,12 @@ HEADERS += \
     core/DeviceMonitor.h \
     core/DeviceControl.h \
     core/CmdPrefix.h \
-    core/common.h
+    core/common.h \
+    algorithm/Interface.h \
+    algorithm/Algorithm.h \
+    algorithm/EmulatorEngine.h \
+    algorithm/VerificationEngine.h \
+    algorithm/Config.h
 
 FORMS += \
     designer/LegacyDefault.ui \
@@ -73,3 +81,9 @@ FORMS += \
 
 RESOURCES += \
     resource/Pictures.qrc
+
+
+LIBS += -L$$PWD/external/lib/ -larcsoft_verification
+
+INCLUDEPATH += $$PWD/external/inc
+DEPENDPATH  += $$PWD/external/inc
