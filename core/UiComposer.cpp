@@ -113,17 +113,6 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
     bool defaultUi = false;
 
     if (SUCCEED(rc)) {
-        for (auto iter = mDeviceUi.begin();
-             iter != mDeviceUi.end(); iter++) {
-            if ((*iter)->getName() == name) {
-                ui = *iter;
-                iter = mDeviceUi.erase(iter);
-                break;
-            }
-        }
-    }
-
-    if (SUCCEED(rc)) {
         for (auto iter = mAnimation.begin();
              iter != mAnimation.end(); iter++) {
             if ((*iter)->name() == name) {
@@ -131,6 +120,17 @@ int32_t UiComposer::onDeviceRemoved(QString &name)
                 animation->stop();
                 SECURE_DELETE(animation);
                 iter = mAnimation.erase(iter);
+                break;
+            }
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        for (auto iter = mDeviceUi.begin();
+             iter != mDeviceUi.end(); iter++) {
+            if ((*iter)->getName() == name) {
+                ui = *iter;
+                iter = mDeviceUi.erase(iter);
                 break;
             }
         }
