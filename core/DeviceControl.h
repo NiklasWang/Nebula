@@ -3,23 +3,40 @@
 
 #include <QString>
 
+#include "algorithm/Interface.h"
+#include "remote/RemoteControl.h"
+
 namespace nebula {
 
-class DeviceControl
+class DeviceControl :
+    public QThread
 {
+    Q_OBJECT
+
 public:
+    int32_t startThread();
+    int32_t stopThread();
+
     QString getName();
     void onNewPathSelected(QString path);
 
 public:
     explicit DeviceControl(QString &name);
     ~DeviceControl();
-    int32_t construct();
-    int32_t destruct();
+
+protected:
+    void run() override;
 
 private:
-    QString mName;
-    QString mPath;
+    int32_t doTask();
+
+private:
+    bool      mExit;
+    Semaphore mExitSem;
+    QString   mName;
+    QString   mPath;
+    RemoteControl      *mCtl;
+    AlgorithmInterface *mAlg;
 };
 
 }

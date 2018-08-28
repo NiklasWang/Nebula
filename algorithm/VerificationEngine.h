@@ -21,7 +21,7 @@ public:
 public:
     Yuv420sp main;
     Yuv420sp sub;
-    int8_t *otp;
+    uint8_t *otp;
     int32_t size;
     QString name;
 };

@@ -57,7 +57,8 @@ private:
     static int32_t kCount;
     static QWidget     *kHorizontalLayoutWidget;
     static QHBoxLayout *kHorizontalLayout;
-    static int32_t kOpacityRange[];
+    static int32_t kPictureOpacityRange[];
+    static int32_t kTextOpacityRange[];
 
 private:
     QGroupBox   *mGroupBox;

@@ -1,6 +1,9 @@
-#include "AlgorithmHelper.h"
+#include <assert.h>
 
-namespace pandora {
+#include "utils/common.h"
+#include "algorithm/AlgorithmHelper.h"
+
+namespace nebula {
 
 #define MAX_ALIGN_SIZE    4096
 #define FRAME_PAD_SIZE    4096
@@ -211,18 +214,6 @@ uint8_t *getI420VData(uint8_t *frame,
 {
     return getI420UData(frame, w, h, ystride, ustride, vstride) +
         ALIGN_WITH_NUM(w, ustride) * h / 4;
-}
-
-int32_t dumpNV21ToFile(uint8_t* dat, const char *prefix,
-    int32_t w, int32_t h, int32_t stride)
-{
-    return dumpNV21ToFile(dat, prefix, w, h, stride, stride);
-}
-
-int32_t dumpNV21ToFile(void* src, const char *prefix,
-    int32_t w, int32_t h, int32_t stride, int32_t scanline)
-{
-    return dumpNV21ToFile((uint8_t *)src, prefix, w, h, stride, scanline);
 }
 
 int32_t yuv420spToYuv420p(uint8_t *yuv420sp, uint8_t *yuv420p,

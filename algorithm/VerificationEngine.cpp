@@ -56,9 +56,10 @@ int32_t VerificationEngine::process()
     }
 
     if (SUCCEED(rc)) {
-        MDouble errs[VERIFY_RES_SIZE] = 0;
+        MDouble errs[VERIFY_RES_SIZE] = { 0 };
         rc = MC_ModuleVerification(mEngine,
-            &imagedata, mParm.otp, errs, mParm.name);
+            &imagedata, mParm.otp, errs,
+            mParm.name.toLocal8Bit().data());
         if (!SUCCEED(rc)) {
             qDebug() << "Device " << mParm.name
                      << " verification failed, " << rc

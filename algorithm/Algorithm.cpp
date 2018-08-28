@@ -19,6 +19,11 @@ Algorithm::Algorithm(QString path, QString name) :
 {
 }
 
+Algorithm::~Algorithm()
+{
+    deinit();
+}
+
 #ifdef USE_ALGORITHM_EMULATOR
 
 int32_t Algorithm::init()

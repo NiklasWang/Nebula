@@ -1,4 +1,5 @@
 #include <QtGlobal>
+#include <QTime>
 
 #include "utils/common.h"
 #include "utils/Time.h"

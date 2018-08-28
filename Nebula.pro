@@ -22,7 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-BUILD_WITH_EMULATOR = y
+BUILD_WITH_EMULATOR = n
 
 SOURCES += \
     main.cpp \
@@ -40,6 +40,7 @@ SOURCES += \
     algorithm/EmulatorEngine.cpp \
     algorithm/VerificationEngine.cpp \
     algorithm/AlgorithmHelper.cpp \
+    remote/RemoteControl.cpp \
     core/common.cpp \
     core/UiComposer.cpp \
     core/MainWindow.cpp \
@@ -69,6 +70,8 @@ HEADERS += \
     algorithm/VerificationEngine.h \
     algorithm/Config.h \
     algorithm/AlgorithmHelper.h \
+    remote/RemoteControl.h \
+    remote/config.h \
     core/MainWindow.h \
     core/UiComposer.h \
     core/DeviceMonitor.h \
@@ -85,7 +88,7 @@ HEADERS += \
     external/inc/platform/asvloffscreen.h \
     external/inc/platform/merror.h
 
-    message("Build with real algorithm")
+    message("Build with real algorithm.")
 }
 
 FORMS += \

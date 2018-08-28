@@ -348,11 +348,11 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
             case DEVICE_UI_TYPE_4: {
                 picture = mPicture3;
                 text = mText3;
-                mStep = 4;
+                mStep = 5;
             } break;
             case DEVICE_UI_TYPE_MAX_INVALID:
             default: {
-                mStep = 4;
+                mStep = 5;
                 rc = PARAM_INVALID;
             } break;
         }
@@ -397,8 +397,13 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
     return rc;
 }
 
-int32_t DeviceUi::kOpacityRange[] = {
-    10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+int32_t DeviceUi::kPictureOpacityRange[] = {
+    100, 90, 80, 70, 60, 50, 40, 30, 20, 10,
+    10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+};
+
+int32_t DeviceUi::kTextOpacityRange[] = {
+    100, 95, 90, 85, 80, 80, 85, 90, 95, 100
 };
 
 int32_t DeviceUi::drawAnimation(int32_t frameId)
@@ -411,20 +416,18 @@ int32_t DeviceUi::drawAnimation(int32_t frameId)
         switch (mStep) {
             case 1: {
                 picture = mPicture0;
-                text = mText0;
             } break;
             case 2: {
                 picture = mPicture1;
-                text = mText1;
             } break;
             case 3: {
                 picture = mPicture2;
-                text = mText2;
             } break;
             case 4: {
                 picture = mPicture3;
-                text = mText3;
-                rc = NOT_REQUIRED;
+            } break;
+            case 5: {
+                text = mResult;
             } break;
             default: {
                 rc = PARAM_INVALID;
@@ -441,12 +444,23 @@ int32_t DeviceUi::drawAnimation(int32_t frameId)
                 picture->width(), picture->height(),
                 Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             QGraphicsOpacityEffect effect;
-            int32_t value = kOpacityRange[frameId % ARRAYSIZE(kOpacityRange)];
-            effect.setOpacity(value * 1.0f / 10);
+            int32_t value = kPictureOpacityRange
+                [frameId % ARRAYSIZE(kPictureOpacityRange)];
+            effect.setOpacity(value * 1.0f / kPictureOpacityRange[0]);
             picture->setGraphicsEffect(&effect);
             picture->setPixmap(fitPixmap);
             picture->repaint();
-            text = nullptr;
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        if (NOTNULL(text)) {
+            QGraphicsOpacityEffect effect;
+            int32_t value = kTextOpacityRange
+                [frameId % ARRAYSIZE(kTextOpacityRange)];
+            effect.setOpacity(value * 1.0f / kTextOpacityRange[0]);
+            text->setGraphicsEffect(&effect);
+            text->repaint();
         }
     }
 

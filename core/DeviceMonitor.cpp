@@ -89,7 +89,7 @@ int32_t DeviceMonitor::doTask()
     process->waitForReadyRead(-1);
     process->waitForFinished(-1);
     QString output = process->readAll();
-
+delaySec(1);
     rc = checkDevices(output);
     if (!SUCCEED(rc)) {
         showError("Failed to check device.\n" + output);
@@ -124,6 +124,11 @@ int32_t DeviceMonitor::checkDevices(QString &output)
             }
         }
     }
+
+static int32_t i = 0;
+i++;
+if (i % 2) { adbDevices.append("123456"); adbDevices.append("34567");}
+else { adbDevices.append("123456"); adbDevices.append("34567");adbDevices.append("1357");adbDevices.append("2468");}
 
     if (SUCCEED(rc)) {
         foreach (QString device, curDevices) {
@@ -163,19 +168,21 @@ int32_t DeviceMonitor::addDevice(QString &name)
     }
 
     if (SUCCEED(rc)) {
-        rc = device->construct();
-        if (!SUCCEED(rc)) {
-            showError("Failed to construct device " + name);
-        } else {
-            device->onNewPathSelected(mPath);
-            mDevices.push_back(device);
-        }
+        device->onNewPathSelected(mPath);
+        mDevices.push_back(device);
     }
 
     if (SUCCEED(rc)) {
         rc = mUi->onDeviceAttached(name);
         if (!SUCCEED(rc)) {
             showError("Failed to draw device " + name + " ui.");
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        rc = device->startThread();
+        if (!SUCCEED(rc)) {
+            showError("Failed to start device thread.");
         }
     }
 
@@ -200,7 +207,7 @@ int32_t DeviceMonitor::removeDevice(QString &name)
     }
 
     if (SUCCEED(rc)) {
-        rc = device->destruct();
+        rc = device->stopThread();
         if (!SUCCEED(rc)) {
             showError("Failed to destruct device " + name);
         }
