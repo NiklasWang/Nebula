@@ -6,5 +6,6 @@
         <file alias="IconColor_16x9">Icon_Splash_of_Color_2496x1404_16x9.jpg</file>
         <file alias="IconColor_16x10">Icon_Splash_of_Color_2560x1600_16x10.jpg</file>
         <file alias="IconColor_4x3">Icon_Splash_of_Color_2560x1920_4x3.jpg</file>
+        <file alias="IconColor_1x1">Icon_Splash_of_Color_1920x1920_1x1.jpg</file>
     </qresource>
 </RCC>
