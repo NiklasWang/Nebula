@@ -107,3 +107,5 @@ LIBS += -L$$PWD/external/lib/ -larcsoft_verification
 
 INCLUDEPATH += $$PWD/external/inc
 DEPENDPATH  += $$PWD/external/inc
+
+RC_ICONS = "icon.ico"

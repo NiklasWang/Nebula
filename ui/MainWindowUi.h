@@ -2,6 +2,7 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
+#include <QObject>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
@@ -12,13 +13,19 @@
 
 namespace nebula {
 
-class MainWindowUi
+class MainWindowUi :
+    public QObject
 {
+    Q_OBJECT
+
 public:
     int32_t setupUi();
     int32_t retranslateUi();
     int32_t resize(QSize &size);
     QSize getSize();
+
+signals:
+    void quit();
 
 public:
     explicit MainWindowUi(QMainWindow *window);

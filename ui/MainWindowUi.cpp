@@ -38,6 +38,7 @@ int32_t MainWindowUi::setupUi()
     if (SUCCEED(rc)) {
         mActionExit = new QAction(mMainWindow);
         mActionExit->setObjectName(QStringLiteral("actionExit"));
+        connect(mActionExit, SIGNAL(triggered(bool)), this, SIGNAL(quit()));
         mActionAbout = new QAction(mMainWindow);
         mActionAbout->setObjectName(QStringLiteral("actionAbout"));
     }

@@ -42,6 +42,7 @@ signals:
     int32_t drawAnimationFrame(QString name, int32_t frameId);
     int32_t updateUi(DeviceUi *ui, DeviceUiType type, bool result);
     void showDebug(DeviceUi *ui, QString text);
+    void quit();
 
 private slots:
     int32_t onDrawUi(std::function<int32_t ()> func);

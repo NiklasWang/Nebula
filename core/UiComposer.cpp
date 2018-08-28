@@ -29,8 +29,8 @@ UiComposer::UiComposer(QMainWindow *window) :
             this, SLOT(onUpdateUi(DeviceUi *, DeviceUiType, bool)),
             Qt::BlockingQueuedConnection);
 
-    connect(this, SIGNAL(showDebug(QString)),
-            this, SLOT(onShowDebug(QString)));
+    connect(this, SIGNAL(showDebug(DeviceUi *, QString)),
+            this, SLOT(onShowDebug(DeviceUi *, QString)));
 }
 
 UiComposer::~UiComposer()
@@ -271,11 +271,16 @@ int32_t UiComposer::construct()
         if (ISNULL(mMainWindowUi)) {
             showError("Failed to create main window.");
         } else {
-            rc = mMainWindowUi->setupUi();
-            if (!SUCCEED(rc)) {
-                showError("Failed to setup main window.");
-                SECURE_DELETE(mMainWindowUi);
-            }
+            connect(mMainWindowUi, SIGNAL(quit()),
+                    this, SIGNAL(quit()));
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        rc = mMainWindowUi->setupUi();
+        if (!SUCCEED(rc)) {
+            showError("Failed to setup main window.");
+            SECURE_DELETE(mMainWindowUi);
         }
     }
 

@@ -38,9 +38,15 @@ int32_t MainWindow::construct()
     }
 
     if (SUCCEED(rc)) {
+        setWindowIcon(QIcon(":/icon/IconColor_1x1"));
+    }
+
+    if (SUCCEED(rc)) {
         mUi = new UiComposer(this);
         if (ISNULL(mUi)) {
             showError("Failed to create ui composer.");
+        } else {
+            connect(mUi, SIGNAL(quit()), this, SLOT(close()));
         }
     }
 
