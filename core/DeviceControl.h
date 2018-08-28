@@ -5,6 +5,7 @@
 
 #include "algorithm/Interface.h"
 #include "remote/RemoteControl.h"
+#include "ui/UpdateUiIntf.h"
 
 namespace nebula {
 
@@ -21,7 +22,7 @@ public:
     void onNewPathSelected(QString path);
 
 public:
-    explicit DeviceControl(QString &name);
+    explicit DeviceControl(QString &name, UpdateUiIntf *ui);
     ~DeviceControl();
 
 protected:
@@ -35,6 +36,7 @@ private:
     Semaphore mExitSem;
     QString   mName;
     QString   mPath;
+    UpdateUiIntf       *mUi;
     RemoteControl      *mCtl;
     AlgorithmInterface *mAlg;
 };

@@ -1,5 +1,5 @@
 #include "utils/common.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "algorithm/AlgorithmHelper.h"
 #include "algorithm/VerificationEngine.h"
 #include "external/inc/arcsoft_verification.h"

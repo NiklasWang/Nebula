@@ -1,5 +1,5 @@
 #include "utils/common.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "DeviceControl.h"
 #include "algorithm/Algorithm.h"
 
@@ -8,7 +8,15 @@ namespace nebula {
 int32_t DeviceControl::doTask()
 {
     int32_t rc = NO_ERROR;
+    int32_t result = false;
     Semaphore sem;
+
+    if (SUCCEED(rc)) {
+        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_1, true);
+        if (!SUCCEED(rc)) {
+            showError("Failed to update ui, 1");
+        }
+    }
 
     if (SUCCEED(rc)) {
         mCtl = new RemoteControl(mPath, mName);
@@ -31,12 +39,26 @@ int32_t DeviceControl::doTask()
     }
 
     if (SUCCEED(rc)) {
+        rc = mCtl->startController();
+        if (!SUCCEED(rc)) {
+            showError("Failed to start remote controller");
+        }
+    }
+
+    if (SUCCEED(rc)) {
         sem.wait();
         rc = mCtl->exitController();
         if (!SUCCEED(rc)) {
             showError("Failed to exit remote controller");
         } else {
             SECURE_DELETE(mCtl);
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_2, true);
+        if (!SUCCEED(rc)) {
+            showError("Failed to update ui, 2");
         }
     }
 
@@ -56,9 +78,16 @@ int32_t DeviceControl::doTask()
     }
 
     if (SUCCEED(rc)) {
-        rc = mAlg->process();
+        result = mAlg->process();
+        if (!SUCCEED(result)) {
+            qDebug() << "Failed to process algorithm";
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_3, result);
         if (!SUCCEED(rc)) {
-            showError("Failed to process algorithm");
+            showError("Failed to update ui, 3");
         }
     }
 
@@ -71,6 +100,20 @@ int32_t DeviceControl::doTask()
 
     if (SUCCEED(rc)) {
         SECURE_DELETE(mAlg);
+    }
+
+    if (SUCCEED(rc)) {
+        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_4, result);
+        if (!SUCCEED(rc)) {
+            showError("Failed to update ui, 4");
+        }
+    }
+
+    if (SUCCEED(rc) || !SUCCEED(rc)) {
+        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_RESULT, result);
+        if (!SUCCEED(rc)) {
+            showError("Failed to update ui, result");
+        }
     }
 
     return rc;
@@ -86,9 +129,10 @@ QString DeviceControl::getName()
     return mName;
 }
 
-DeviceControl::DeviceControl(QString &name) :
+DeviceControl::DeviceControl(QString &name, UpdateUiIntf *ui) :
     mExit(false),
     mName(name),
+    mUi(ui),
     mCtl(nullptr),
     mAlg(nullptr)
 {

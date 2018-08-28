@@ -7,17 +7,20 @@
 #include <QObject>
 
 #include "utils/common.h"
+#include "ui/Common.h"
 #include "ui/MainWindowUi.h"
 #include "ui/DefaultUi.h"
 #include "ui/DeviceUi.h"
 #include "ui/Animation.h"
 #include "ui/AnimationDrawIntf.h"
+#include "ui/UpdateUiIntf.h"
 
 namespace nebula {
 
 class UiComposer :
     public QObject,
-    public AnimationDrawIntf
+    public AnimationDrawIntf,
+    public UpdateUiIntf
 {
     Q_OBJECT
 
@@ -25,6 +28,7 @@ public:
     int32_t onDeviceAttached(QString &name);
     int32_t onDeviceRemoved(QString &name);
     int32_t drawAnimation(QString name, int32_t frameId) override;
+    int32_t updateUiResult(QString name, DeviceUiType type, bool result) override;
 
 public:
     explicit UiComposer(QMainWindow *window);
@@ -35,10 +39,12 @@ public:
 signals:
     int32_t drawUi(std::function<int32_t ()> func);
     int32_t drawAnimationFrame(QString name, int32_t frameId);
+    int32_t updateUi(DeviceUi *ui, DeviceUiType type, bool result);
 
 private slots:
     int32_t onDrawUi(std::function<int32_t ()> func);
     int32_t onDrawAnimationFrame(QString name, int32_t frameId);
+    int32_t onUpdateUi(DeviceUi *ui, DeviceUiType type, bool result);
 
 private:
     bool          mConstructed;

@@ -2,7 +2,7 @@
 
 #include "utils/common.h"
 #include "utils/Time.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "core/CmdPrefix.h"
 #include "core/MainWindow.h"
 #include "core/DeviceMonitor.h"
@@ -161,7 +161,7 @@ int32_t DeviceMonitor::addDevice(QString &name)
     DeviceControl *device = nullptr;
 
     if (SUCCEED(rc)) {
-        device = new DeviceControl(name);
+        device = new DeviceControl(name, mUi);
         if (ISNULL(device)) {
             showError("Failed to create device " + name);
         }

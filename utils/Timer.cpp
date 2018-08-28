@@ -1,7 +1,7 @@
 #include <QDateTime>
 #include <QDebug>
 
-#include "core/common.h"
+#include "core/Common.h"
 #include "utils/common.h"
 #include "utils/Time.h"
 #include "utils/Timer.h"

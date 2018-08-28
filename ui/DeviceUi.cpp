@@ -1,7 +1,7 @@
 #include <QGraphicsOpacityEffect>
 
 #include "utils/common.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "ui/DeviceUi.h"
 #include "ui/UiLayout.h"
 #include "core/MainWindow.h"
@@ -350,7 +350,6 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
                 text = mText3;
                 mStep = 5;
             } break;
-            case DEVICE_UI_TYPE_MAX_INVALID:
             default: {
                 mStep = 5;
                 rc = PARAM_INVALID;

@@ -2,7 +2,7 @@
 #include <QProcess>
 
 #include "utils/common.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "remote/config.h"
 #include "remote/RemoteControl.h"
 

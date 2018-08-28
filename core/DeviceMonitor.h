@@ -37,10 +37,10 @@ public slots:
     void onNewPathSelected(QString path);
 
 private:
-    QString     mPath;
-    bool        mExit;
-    Semaphore   mExitSem;
-    int32_t     mLoopCnt;
+    QString   mPath;
+    bool      mExit;
+    Semaphore mExitSem;
+    int32_t   mLoopCnt;
     UiComposer *mUi;
     std::list<DeviceControl *> mDevices;
 };

@@ -4,7 +4,7 @@
 #include <QFileInfoList>
 
 #include "utils/common.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "algorithm/Config.h"
 #include "algorithm/Algorithm.h"
 #include "algorithm/EmulatorEngine.h"

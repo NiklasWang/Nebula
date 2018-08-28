@@ -1,7 +1,7 @@
 #include <QMainWindow>
 
 #include "utils/common.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "core/UiComposer.h"
 
 namespace nebula {
@@ -15,6 +15,7 @@ UiComposer::UiComposer(QMainWindow *window) :
 {
     qRegisterMetaType<MessageType>("MessageType");
     qRegisterMetaType<std::function<int32_t ()> >("std::function<int32_t ()>");
+    qRegisterMetaType<DeviceUiType>("DeviceUiType");
 
     connect(this, SIGNAL(drawUi(std::function<int32_t ()>)),
             this, SLOT(onDrawUi(std::function<int32_t ()>)),
@@ -22,6 +23,10 @@ UiComposer::UiComposer(QMainWindow *window) :
 
     connect(this, SIGNAL(drawAnimationFrame(QString, int32_t)),
             this, SLOT(onDrawAnimationFrame(QString, int32_t)),
+            Qt::BlockingQueuedConnection);
+
+    connect(this, SIGNAL(updateUi(DeviceUi *, DeviceUiType, bool)),
+            this, SLOT(onUpdateUi(DeviceUi *, DeviceUiType, bool)),
             Qt::BlockingQueuedConnection);
 }
 
@@ -341,6 +346,38 @@ int32_t UiComposer::destruct()
 int32_t UiComposer::onDrawUi(std::function<int32_t ()> func)
 {
     return func();
+}
+
+int32_t UiComposer::updateUiResult(QString name, DeviceUiType type, bool result)
+{
+    int32_t rc = NO_ERROR;
+    DeviceUi *ui = nullptr;
+
+    if (SUCCEED(rc)) {
+        for (auto iter = mDeviceUi.begin();
+             iter != mDeviceUi.end(); iter++) {
+            if ((*iter)->getName() == name) {
+                ui = *iter;
+                break;
+            }
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        if (NOTNULL(ui)) {
+            rc = updateUi(ui, type, result);
+            if (!SUCCEED(rc)) {
+                showError("Failed to send update ui signal");
+            }
+        }
+    }
+
+    return rc;
+}
+
+int32_t UiComposer::onUpdateUi(DeviceUi *ui, DeviceUiType type, bool result)
+{
+    return ui->update(type, result);
 }
 
 }

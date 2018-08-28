@@ -10,19 +10,11 @@
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
+#include "ui/Common.h"
 #include "ui/AnimationDrawIntf.h"
 #include "ui/Animation.h"
 
 namespace nebula {
-
-enum DeviceUiType {
-    DEVICE_UI_TYPE_1,
-    DEVICE_UI_TYPE_2,
-    DEVICE_UI_TYPE_3,
-    DEVICE_UI_TYPE_4,
-    DEVICE_UI_TYPE_RESULT,
-    DEVICE_UI_TYPE_MAX_INVALID,
-};
 
 class DeviceUi :
     public QObject

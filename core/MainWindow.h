@@ -5,7 +5,7 @@
 #include <QMainWindow>
 
 #include "core/UiComposer.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "core/DeviceMonitor.h"
 
 namespace nebula {

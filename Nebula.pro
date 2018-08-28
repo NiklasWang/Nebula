@@ -49,12 +49,14 @@ SOURCES += \
 
 HEADERS += \
     version.h \
+    ui/Common.h \
     ui/Animation.h \
     ui/UiLayout.h \
     ui/DefaultUi.h \
     ui/MainWindowUi.h \
     ui/DeviceUi.h \
     ui/AnimationDrawIntf.h \
+    ui/UpdateUiIntf.h \
     utils/clist.h \
     utils/common.h \
     utils/CQueue.h \
@@ -77,7 +79,7 @@ HEADERS += \
     core/DeviceMonitor.h \
     core/DeviceControl.h \
     core/CmdPrefix.h \
-    core/common.h
+    core/Common.h
 
 
 !contains(BUILD_WITH_EMULATOR, y) {

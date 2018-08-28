@@ -2,7 +2,7 @@
 #include <QFileDialog>
 
 #include "utils/common.h"
-#include "core/common.h"
+#include "core/Common.h"
 #include "core/MainWindow.h"
 #include "ui/DefaultUi.h"
 #include "ui/UiLayout.h"
