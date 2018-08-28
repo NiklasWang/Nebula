@@ -469,6 +469,11 @@ int32_t DeviceUi::drawAnimation(int32_t frameId)
 int32_t DeviceUi::debug(QString &str)
 {
     mDebugEditor->append("> " + str);
+
+    QTextCursor cursor = mDebugEditor->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    mDebugEditor->setTextCursor(cursor);
+
     return NO_ERROR;
 }
 

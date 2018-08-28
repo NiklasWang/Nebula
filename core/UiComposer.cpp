@@ -28,6 +28,9 @@ UiComposer::UiComposer(QMainWindow *window) :
     connect(this, SIGNAL(updateUi(DeviceUi *, DeviceUiType, bool)),
             this, SLOT(onUpdateUi(DeviceUi *, DeviceUiType, bool)),
             Qt::BlockingQueuedConnection);
+
+    connect(this, SIGNAL(showDebug(QString)),
+            this, SLOT(onShowDebug(QString)));
 }
 
 UiComposer::~UiComposer()
@@ -377,7 +380,48 @@ int32_t UiComposer::updateUiResult(QString name, DeviceUiType type, bool result)
 
 int32_t UiComposer::onUpdateUi(DeviceUi *ui, DeviceUiType type, bool result)
 {
-    return ui->update(type, result);
+    int32_t rc = NO_ERROR;
+
+    if (NOTNULL(ui)) {
+        rc = ui->update(type, result);
+    }
+
+    return rc;
+}
+
+void UiComposer::debug(QString name, QString text)
+{
+    int32_t rc = NO_ERROR;
+    DeviceUi *ui = nullptr;
+
+    if (SUCCEED(rc)) {
+        for (auto iter = mDeviceUi.begin();
+             iter != mDeviceUi.end(); iter++) {
+            if ((*iter)->getName() == name) {
+                ui = *iter;
+                break;
+            }
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        if (NOTNULL(ui)) {
+            showDebug(ui, text);
+        }
+    }
+
+    return;
+}
+
+int32_t UiComposer::onShowDebug(DeviceUi *ui, QString text)
+{
+    int32_t rc = NO_ERROR;
+
+    if (NOTNULL(ui)) {
+        rc = ui->debug(text);
+    }
+
+    return rc;
 }
 
 }

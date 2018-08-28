@@ -88,11 +88,16 @@ int32_t DeviceMonitor::doTask()
     process->start(CMD_ADB_DEVICES);
     process->waitForReadyRead(-1);
     process->waitForFinished(-1);
-    QString output = process->readAll();
-delaySec(1);
-    rc = checkDevices(output);
-    if (!SUCCEED(rc)) {
-        showError("Failed to check device.\n" + output);
+    QString error = process->readAllStandardError();
+    QString output = process->readAllStandardOutput();
+
+    if (error.size()) {
+        qDebug() << "Device monitor executin error, " << error;
+    } else {
+        rc = checkDevices(output);
+        if (!SUCCEED(rc)) {
+            showError("Failed to check device.\n" + output);
+        }
     }
 
     return rc;
@@ -124,11 +129,6 @@ int32_t DeviceMonitor::checkDevices(QString &output)
             }
         }
     }
-
-static int32_t i = 0;
-i++;
-if (i % 2) { adbDevices.append("123456"); adbDevices.append("34567");}
-else { adbDevices.append("123456"); adbDevices.append("34567");adbDevices.append("1357");adbDevices.append("2468");}
 
     if (SUCCEED(rc)) {
         foreach (QString device, curDevices) {

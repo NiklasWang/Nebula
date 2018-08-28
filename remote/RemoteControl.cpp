@@ -1,4 +1,5 @@
 #include <QFile>
+#include <QDir>
 #include <QProcess>
 
 #include "utils/common.h"
@@ -14,10 +15,11 @@ void RemoteControl::run()
     QProcess *process;
 
     if (SUCCEED(rc)) {
-        QFile script(SCRIPT_PATH);
+        QDir path(SCRIPT_PATH);
+        QFile script(path.absolutePath());
         if (!script.exists()) {
-            showError(QString("Script not "
-                "exists, ") + SCRIPT_PATH);
+            showError("Script not exists, " +
+                path.absolutePath());
             rc = NOT_EXIST;
         }
     }
@@ -33,7 +35,7 @@ void RemoteControl::run()
     if (SUCCEED(rc)) {
         QString script = SCRIPT_PATH;
         QStringList args;
-        args << mName << mPath;
+        args << mName << "2" << mPath;
         process->start(script, args);
     }
 

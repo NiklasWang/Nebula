@@ -1,6 +1,7 @@
 #include "utils/common.h"
 #include "core/Common.h"
-#include "DeviceControl.h"
+#include "algorithm/Config.h"
+#include "core/DeviceControl.h"
 #include "algorithm/Algorithm.h"
 
 namespace nebula {
@@ -110,7 +111,8 @@ int32_t DeviceControl::doTask()
     }
 
     if (SUCCEED(rc) || !SUCCEED(rc)) {
-        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_RESULT, result);
+        rc = mUi->updateUiResult(mName,
+            DEVICE_UI_TYPE_RESULT, result && SUCCEED(rc));
         if (!SUCCEED(rc)) {
             showError("Failed to update ui, result");
         }
