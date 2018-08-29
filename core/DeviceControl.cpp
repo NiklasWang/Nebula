@@ -131,10 +131,12 @@ QString DeviceControl::getName()
     return mName;
 }
 
-DeviceControl::DeviceControl(QString &name, UpdateUiIntf *ui) :
+DeviceControl::DeviceControl(QString &name,
+    UpdateUiIntf *ui, DebugIntf *debug) :
     mExit(false),
     mName(name),
     mUi(ui),
+    mDebug(debug),
     mCtl(nullptr),
     mAlg(nullptr)
 {

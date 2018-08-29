@@ -30,6 +30,7 @@ private:
     Semaphore mExitSem;
     QString   mPath;
     QString   mName;
+    bool      mResult;
     std::function<int32_t ()> mCbFunc;
 };
 

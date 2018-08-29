@@ -161,7 +161,7 @@ int32_t DeviceMonitor::addDevice(QString &name)
     DeviceControl *device = nullptr;
 
     if (SUCCEED(rc)) {
-        device = new DeviceControl(name, mUi);
+        device = new DeviceControl(name, mUi, mUi);
         if (ISNULL(device)) {
             showError("Failed to create device " + name);
         }

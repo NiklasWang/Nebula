@@ -14,13 +14,15 @@
 #include "ui/Animation.h"
 #include "ui/AnimationDrawIntf.h"
 #include "ui/UpdateUiIntf.h"
+#include "ui/DebugIntf.h"
 
 namespace nebula {
 
 class UiComposer :
     public QObject,
     public AnimationDrawIntf,
-    public UpdateUiIntf
+    public UpdateUiIntf,
+    public DebugIntf
 {
     Q_OBJECT
 
@@ -29,11 +31,11 @@ public:
     int32_t onDeviceRemoved(QString &name);
     int32_t drawAnimation(QString name, int32_t frameId) override;
     int32_t updateUiResult(QString name, DeviceUiType type, bool result) override;
-    void debug(QString text, QString name);
+    void debug(QString text, QString name) override;
 
 public:
     explicit UiComposer(QMainWindow *window);
-    ~UiComposer();
+    virtual ~UiComposer();
     int32_t construct();
     int32_t destruct();
 

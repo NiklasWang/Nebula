@@ -57,6 +57,7 @@ HEADERS += \
     ui/DeviceUi.h \
     ui/AnimationDrawIntf.h \
     ui/UpdateUiIntf.h \
+    ui/DebugIntf.h \
     utils/clist.h \
     utils/common.h \
     utils/CQueue.h \

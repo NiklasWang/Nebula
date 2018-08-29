@@ -44,11 +44,14 @@ void RemoteControl::run()
         process->waitForFinished();
         QString result = process->readAll();
         QStringList lines = result.split("\n");
-        QString lastLine = lines.at(lines.size() - 1);
-        if (!lastLine.contains(SCRIPT_LAST_LINE_SUCCEED_MARK),
-            Qt::CaseInsensitive) {
-            showError("Script running failed, no succeed mark found.");
-            rc = TEST_FAILED;
+        for (int32_t i = 0; i < SCRIPT_LINE_COUNT_FOR_MARK &&
+             i < lines.size(); i++) {
+            QString curLine = lines.at(lines.size() - i - 1);
+            if (curLine.contains(SCRIPT_LAST_LINE_SUCCEED_MARK),
+                Qt::CaseInsensitive) {
+                mResult = true;
+                break;
+            }
         }
     }
 
@@ -56,6 +59,10 @@ void RemoteControl::run()
         if (NOTNULL(mCbFunc)) {
             mCbFunc();
         }
+    }
+
+    if (SUCCEED(rc) || !SUCCEED(rc)) {
+        mExitSem.signal();
     }
 
     return;
@@ -79,7 +86,7 @@ int32_t RemoteControl::exitController()
     mExit = true;
     mExitSem.wait();
 
-    return NO_ERROR;
+    return mResult;
 }
 
 int32_t RemoteControl::setCb(std::function<int32_t ()> func)
@@ -91,7 +98,8 @@ int32_t RemoteControl::setCb(std::function<int32_t ()> func)
 RemoteControl::RemoteControl(QString path, QString name) :
     mExit(false),
     mPath(path),
-    mName(name)
+    mName(name),
+    mResult(false)
 {
 }
 
