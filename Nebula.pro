@@ -35,6 +35,7 @@ SOURCES += \
     ui/DefaultUi.cpp \
     ui/MainWindowUi.cpp \
     ui/DeviceUi.cpp \
+    ui/AboutUi.cpp \
     ui/Animation.cpp \
     algorithm/Algorithm.cpp \
     algorithm/EmulatorEngine.cpp \
@@ -44,6 +45,7 @@ SOURCES += \
     core/common.cpp \
     core/UiComposer.cpp \
     core/MainWindow.cpp \
+    core/AboutDialog.cpp \
     core/DeviceMonitor.cpp \
     core/DeviceControl.cpp
 
@@ -55,6 +57,7 @@ HEADERS += \
     ui/DefaultUi.h \
     ui/MainWindowUi.h \
     ui/DeviceUi.h \
+    ui/AboutUi.h \
     ui/AnimationDrawIntf.h \
     ui/UpdateUiIntf.h \
     ui/DebugIntf.h \
@@ -77,6 +80,7 @@ HEADERS += \
     remote/config.h \
     core/MainWindow.h \
     core/UiComposer.h \
+    core/AboutDialog.h \
     core/DeviceMonitor.h \
     core/DeviceControl.h \
     core/CmdPrefix.h \
@@ -98,7 +102,8 @@ FORMS += \
     designer/LegacyDefault.ui \
     designer/LegacyDevice.ui \
     designer/Default.ui \
-    designer/Devices.ui
+    designer/Devices.ui \
+    designer/AboutDialog.ui
 
 RESOURCES += \
     resource/Pictures.qrc

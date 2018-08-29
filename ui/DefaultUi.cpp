@@ -23,8 +23,10 @@ DefaultUi::DefaultUi(QWidget *parent) :
 
 DefaultUi::~DefaultUi()
 {
-    mGridLayoutWidget->setParent(nullptr);
-    mGridLayoutWidget->deleteLater();
+    if (NOTNULL(mGridLayoutWidget)) {
+        mGridLayoutWidget->setParent(nullptr);
+        mGridLayoutWidget->deleteLater();
+    }
 }
 
 int32_t DefaultUi::setupUi()

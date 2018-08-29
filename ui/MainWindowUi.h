@@ -29,7 +29,7 @@ signals:
 
 public:
     explicit MainWindowUi(QMainWindow *window);
-    ~MainWindowUi();
+    virtual ~MainWindowUi();
 
 private:
     QMainWindow *mMainWindow;
