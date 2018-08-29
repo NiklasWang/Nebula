@@ -1,9 +1,10 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef ALG_CONFIG_H
+#define ALG_CONFIG_H
 
 #define USE_ALGORITHM_EMULATOR
 
 #define DIR_FILE_NUM        3
+#define DIR_DEFAULT_NUM     2
 #define MAIN_CAM_PIC_PREFIX "main"
 #define SUB_CAM_PIC_PREFIX  "sub"
 #define OTP_DUAL_CAM_CALIB  "calibration"

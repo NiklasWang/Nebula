@@ -53,7 +53,8 @@ int32_t Algorithm::init()
                       QDir::NoSymLinks | QDir::AllDirs);
         dir.setSorting(QDir::Size | QDir::Reversed);
         list = dir.entryInfoList();
-        if (list.size() != DIR_FILE_NUM) {
+
+        if (list.size() != DIR_FILE_NUM + DIR_DEFAULT_NUM) {
             showError("Invalid file number in " + mPath);
             rc = PARAM_INVALID;
         }
@@ -63,10 +64,14 @@ int32_t Algorithm::init()
         for (auto iter : list) {
             QString name = iter.fileName();
             QStringList words = name.split("_", QString::SkipEmptyParts);
-            QString ws = words.at(FILENAME_W_POSITION);
-            QString hs = words.at(FILENAME_H_POSITION);
-            QString strides = words.at(FILENAME_STRIDE_POSITION);
-            QString scanlines = words.at(FILENAME_SCANLINE_POSITION);
+
+            QString ws, hs, strides, scanlines;
+            if (words.size() > FILENAME_SCANLINE_POSITION) {
+                ws = words.at(FILENAME_W_POSITION);
+                hs = words.at(FILENAME_H_POSITION);
+                strides   = words.at(FILENAME_STRIDE_POSITION);
+                scanlines = words.at(FILENAME_SCANLINE_POSITION);
+            }
 
             if (name.contains(
                 MAIN_CAM_PIC_PREFIX, Qt::CaseSensitive)) {
@@ -99,9 +104,6 @@ int32_t Algorithm::init()
                     showError("Failed to create otp qfile.");
                     rc = NO_MEMORY;
                 }
-            } else {
-                showError("Unknown file type " + iter.fileName());
-                rc = INVALID_FORMAT;
             }
             if (!SUCCEED(rc)) {
                 break;

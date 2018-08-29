@@ -24,7 +24,15 @@ set /a time=0
 
 :pullFile
 	if not exist %3 md %3
+
 	adb -s %1 pull /sdcard/DCIM/yuv %3
+	move %3\yuv\*.* %3\
+	rmdir /s /q %3\yuv\
 	adb -s %1 shell rm -rf /sdcard/DCIM/yuv
-	echo "success"
+
+	adb -s %1 pull /data/misc/camera/ %3\
+	move %3\camera\calib* %3\
+	rmdir /s /q %3\camera\
+
+	echo succeed
 	

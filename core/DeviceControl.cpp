@@ -1,6 +1,9 @@
+#include <QDir>
+
 #include "utils/common.h"
 #include "core/Common.h"
 #include "algorithm/Config.h"
+#include "remote/config.h"
 #include "core/DeviceControl.h"
 #include "algorithm/Algorithm.h"
 
@@ -9,7 +12,7 @@ namespace nebula {
 int32_t DeviceControl::doTask()
 {
     int32_t rc = NO_ERROR;
-    int32_t result = false;
+    int32_t result = TEST_FAILED;
     Semaphore sem;
 
     if (SUCCEED(rc)) {
@@ -49,18 +52,16 @@ int32_t DeviceControl::doTask()
     if (SUCCEED(rc)) {
         sem.wait();
         rc = mCtl->exitController();
-        if (!SUCCEED(rc)) {
-            showError("Failed to exit remote controller");
-        } else {
-            SECURE_DELETE(mCtl);
-        }
-    }
-
-    if (SUCCEED(rc)) {
-        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_2, true);
-        if (!SUCCEED(rc)) {
+        int32_t _rc = mUi->updateUiResult(
+            mName, DEVICE_UI_TYPE_2, SUCCEED(rc));
+        if (!SUCCEED(_rc)) {
+            mDebug->debug(mName, "Remote control FAILED.");
             showError("Failed to update ui, 2");
+            rc |= _rc;
+        } else {
+            mDebug->debug(mName, "Remote control succeed.");
         }
+        SECURE_DELETE(mCtl);
     }
 
     if (SUCCEED(rc)) {
@@ -72,38 +73,34 @@ int32_t DeviceControl::doTask()
     }
 
     if (SUCCEED(rc)) {
-        rc = mAlg->init();
+        int32_t rc = mAlg->init();
         if (!SUCCEED(rc)) {
-            showError("Failed to init algorithm");
+            mDebug->debug(mName, "Rules checking FAILED.");
         }
     }
 
     if (SUCCEED(rc)) {
         result = mAlg->process();
-        if (!SUCCEED(result)) {
-            qDebug() << "Failed to process algorithm";
-        }
-    }
-
-    if (SUCCEED(rc)) {
         rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_3, result);
         if (!SUCCEED(rc)) {
             showError("Failed to update ui, 3");
+        }
+        if (!SUCCEED(result)) {
+            mDebug->debug(mName, "Run calibration FAILED.");
+        } else {
+            mDebug->debug(mName, "Run calibration succeed.");
         }
     }
 
     if (SUCCEED(rc)) {
         rc = mAlg->deinit();
         if (!SUCCEED(rc)) {
-            showError("Failed to deinit algorithm");
+            mDebug->debug(mName, "Destruct algorithm FAILED.");
         }
-    }
-
-    if (SUCCEED(rc)) {
         SECURE_DELETE(mAlg);
     }
 
-    if (SUCCEED(rc)) {
+    if (SUCCEED(rc) && SUCCEED(result)) {
         rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_4, result);
         if (!SUCCEED(rc)) {
             showError("Failed to update ui, 4");
@@ -111,10 +108,14 @@ int32_t DeviceControl::doTask()
     }
 
     if (SUCCEED(rc) || !SUCCEED(rc)) {
-        rc = mUi->updateUiResult(mName,
-            DEVICE_UI_TYPE_RESULT, result && SUCCEED(rc));
+        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_RESULT, result);
         if (!SUCCEED(rc)) {
             showError("Failed to update ui, result");
+        }
+        if (!SUCCEED(result)) {
+            mDebug->debug(mName, "Total result: FAILED.");
+        } else {
+            mDebug->debug(mName, "Total result: SUCCEED.");
         }
     }
 
@@ -178,6 +179,26 @@ int32_t DeviceControl::stopThread()
 void DeviceControl::onNewPathSelected(QString path)
 {
     mPath = path;
+    mPath.append("/");
+    mPath.append(DATA_PATH_BASE);
+
+    QDir dir1(mPath);
+    if (!dir1.exists()) {
+        dir1.mkdir(mPath);
+    }
+
+    mPath.append("/");
+    mPath.append(mName);
+
+    QDir dir(mPath);
+    if (dir.exists()) {
+        dir.rmdir(mPath);
+    }
+    if (!dir.exists()) {
+        dir.mkdir(mPath);
+    }
+
+    mPath = dir.toNativeSeparators(mPath);
 }
 
 }
