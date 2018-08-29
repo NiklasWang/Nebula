@@ -121,9 +121,10 @@ int32_t Algorithm::init()
     }
 
     if (SUCCEED(rc)) {
-        rc = mFiles[0]->open(QFile::ReadOnly);
-        if (!SUCCEED(rc)) {
+        bool result = mFiles[0]->open(QFile::ReadOnly);
+        if (!result) {
             showError("Failed to open otp file");
+            rc = PERM_DENIED;
         }
     }
 
@@ -142,9 +143,10 @@ int32_t Algorithm::init()
 
 
     if (SUCCEED(rc)) {
-        rc = mFiles[FILE_TYPE_MAIN]->open(QFile::ReadOnly);
-        if (!SUCCEED(rc)) {
+        bool result = mFiles[FILE_TYPE_MAIN]->open(QFile::ReadOnly);
+        if (!result) {
             showError("Failed to open main file");
+            rc = PERM_DENIED;
         }
     }
 
@@ -162,9 +164,10 @@ int32_t Algorithm::init()
     }
 
     if (SUCCEED(rc)) {
-        rc = mFiles[FILE_TYPE_SUB]->open(QFile::ReadOnly);
-        if (!SUCCEED(rc)) {
+        bool result = mFiles[FILE_TYPE_SUB]->open(QFile::ReadOnly);
+        if (!result) {
             showError("Failed to open sub file");
+            rc = PERM_DENIED;
         }
     }
 
