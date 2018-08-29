@@ -350,6 +350,12 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
                 text = mText3;
                 mStep = 5;
             } break;
+            case DEVICE_UI_TYPE_RESULT: {
+                picture = nullptr;
+                text = nullptr;
+                mStep = 5;
+                rc = JUMP_DONE;
+            } break;
             default: {
                 mStep = 5;
                 rc = PARAM_INVALID;
@@ -377,20 +383,21 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
             QPixmap fitpixmap = pixmap.scaled(with, height,
                 Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             picture->setPixmap(fitpixmap);
-            text->setStyleSheet("background-color:red");
+            text->setStyleSheet("background-color:red; color:white;");
         }
     }
 
-    if (SUCCEED(rc)) {
+    if (SUCCEED(rc) || rc == JUMP_DONE) {
         if (type == DEVICE_UI_TYPE_RESULT) {
             if (result) {
                 mResult->setText("SUCCEED");
-                mResult->setStyleSheet("background-color:green");
+                mResult->setStyleSheet("background-color:green; color:white;");
             } else {
                 mResult->setText("FAILED");
-                mResult->setStyleSheet("background-color:red");
+                mResult->setStyleSheet("background-color:red; color:white;");
             }
         }
+        RETURNIGNORE(rc, JUMP_DONE);
     }
 
     return rc;

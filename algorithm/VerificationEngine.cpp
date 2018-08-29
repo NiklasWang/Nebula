@@ -49,7 +49,7 @@ int32_t VerificationEngine::process()
 
     if (SUCCEED(rc)) {
         memset(&imagedata, 0, sizeof(ArcStereoImageData));
-        imagedata.chessboardWidth = 19;
+        imagedata.chessboardWidth  = 19;
         imagedata.chessboardHeight = 14;
         imagedata.leftImg  = &vleftoffscreen;
         imagedata.rightImg = &vrightoffscreen;
