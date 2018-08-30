@@ -63,7 +63,11 @@ int32_t VerificationEngine::process()
             &imagedata, mParm.otp, errs,
             mParm.name.toLocal8Bit().data());
         if (!SUCCEED(rc)) {
-            showError(QString("Run algorithm failed") + rc);
+            mLastResult = QString("Run algorithm failed, 0x");
+            mLastResult.append(QString::number(rc, 16));
+            mLastResult.append("\n");
+            mLastResult.append("Please check testing environment.");
+            showError(mLastResult);
         } else {
             avg = errs[0];
             max = errs[1];

@@ -3,7 +3,9 @@
 #include <QProcess>
 
 #include "utils/common.h"
+#include "utils/Time.h"
 #include "core/Common.h"
+#include "algorithm/Config.h"
 #include "remote/config.h"
 #include "remote/RemoteControl.h"
 
@@ -56,6 +58,13 @@ void RemoteControl::run()
     }
 
     if (SUCCEED(rc)) {
+        rc = checkRules();
+        if (!SUCCEED(rc)) {
+            showError("Failed to check rules on remote device");
+        }
+    }
+
+    if (SUCCEED(rc) || !SUCCEED(rc)) {
         if (NOTNULL(mCbFunc)) {
             mCbFunc();
         }
@@ -66,6 +75,49 @@ void RemoteControl::run()
     }
 
     return;
+}
+
+int32_t RemoteControl::checkRules()
+{
+    int32_t rc = NO_ERROR;
+    int32_t count = 0;
+    QFileInfoList list;
+
+    if (SUCCEED(rc)) {
+        QDir dir(mPath);
+        dir.setFilter(QDir::Files | QDir::Hidden |
+                      QDir::NoSymLinks | QDir::AllDirs);
+        dir.setSorting(QDir::Size | QDir::Reversed);
+
+        list = dir.entryInfoList();
+        if (list.size() != DIR_FILE_NUM + DIR_DEFAULT_NUM) {
+            rc = TEST_FAILED;
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        for (auto iter : list) {
+            QString name = iter.fileName();
+            if (name.contains(
+                MAIN_CAM_PIC_PREFIX, Qt::CaseSensitive)) {
+                count++;
+            } else if (name.contains(
+                SUB_CAM_PIC_PREFIX, Qt::CaseSensitive)) {
+                count++;
+            }  else if (name.contains(
+                OTP_DUAL_CAM_CALIB, Qt::CaseSensitive)) {
+                count++;
+            }
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        if (count != DIR_FILE_NUM) {
+            rc  = TEST_FAILED;
+        }
+    }
+
+    return rc;
 }
 
 int32_t RemoteControl::startController()
@@ -83,10 +135,16 @@ int32_t RemoteControl::startController()
 
 int32_t RemoteControl::exitController()
 {
+    int32_t rc = NO_ERROR;
+
     mExit = true;
     mExitSem.wait();
 
-    return mResult ? NO_ERROR : TEST_FAILED;
+    if (!mResult) {
+        rc = TEST_FAILED;
+    }
+
+    return rc;
 }
 
 int32_t RemoteControl::setCb(std::function<int32_t ()> func)

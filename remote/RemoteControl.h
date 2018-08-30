@@ -26,6 +26,9 @@ protected:
     void run() override;
 
 private:
+    int32_t checkRules();
+
+private:
     bool      mExit;
     Semaphore mExitSem;
     QString   mPath;

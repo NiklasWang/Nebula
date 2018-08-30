@@ -32,6 +32,7 @@ protected:
 
 private:
     int32_t doTask();
+    int32_t rmdir(QString path);
 
 private:
     bool      mExit;

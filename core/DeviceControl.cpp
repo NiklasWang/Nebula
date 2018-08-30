@@ -123,6 +123,10 @@ int32_t DeviceControl::doTask()
         }
     }
 
+    if (SUCCEED(rc) || !SUCCEED(rc)) {
+        mExitSem.signal();
+    }
+
     return rc;
 }
 
@@ -196,13 +200,38 @@ void DeviceControl::onNewPathSelected(QString path)
 
     QDir dir(mPath);
     if (dir.exists()) {
-        dir.rmdir(mPath);
+        rmdir(mPath);
     }
     if (!dir.exists()) {
         dir.mkdir(mPath);
     }
 
     mPath = dir.toNativeSeparators(mPath);
+
+    return;
+}
+
+int32_t DeviceControl::rmdir(QString path)
+{
+    QDir dir(path);
+    dir.setFilter(QDir::Files | QDir::Hidden |
+                  QDir::NoSymLinks | QDir::AllDirs);
+    dir.setSorting(QDir::Size | QDir::Reversed);
+
+    QFileInfoList list = dir.entryInfoList();
+    for (auto iter : list) {
+        QString path = iter.absoluteFilePath();
+        QFileInfo file(path);
+        if (file.isFile() || file.isSymLink()) {
+            if (!QFile::remove(path)) {
+                QString text = "Failed to remove file" + path;
+                mDebug->debug(mName, text);
+                showError(text);
+            }
+        }
+    }
+
+    return dir.rmdir(dir.absolutePath()) ? NO_ERROR : PERM_DENIED;
 }
 
 }
