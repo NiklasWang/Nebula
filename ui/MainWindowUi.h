@@ -26,6 +26,7 @@ public:
 
 signals:
     void quit();
+    void about();
 
 public:
     explicit MainWindowUi(QMainWindow *window);

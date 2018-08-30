@@ -273,6 +273,8 @@ int32_t UiComposer::construct()
         } else {
             connect(mMainWindowUi, SIGNAL(quit()),
                     this, SIGNAL(quit()));
+            connect(mMainWindowUi, SIGNAL(about()),
+                    this, SIGNAL(about()));
         }
     }
 

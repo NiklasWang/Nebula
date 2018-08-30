@@ -7,10 +7,12 @@
 #include "core/UiComposer.h"
 #include "core/Common.h"
 #include "core/DeviceMonitor.h"
+#include "core/AboutDialog.h"
 
 namespace nebula {
 
-class MainWindow : public QMainWindow
+class MainWindow :
+    public QMainWindow
 {
     Q_OBJECT
 
@@ -30,12 +32,15 @@ signals:
 
 private slots:
     int32_t onDialogShow(MessageType type, const QString msg);
+    int32_t showAbout();
+    void closeAbout();
 
 private:
     bool mConstructed;
     QApplication  *mApp;
     QWidget       *mParent;
     UiComposer    *mUi;
+    AboutDialog   *mAbout;
     DeviceMonitor *mMonitor;
 };
 

@@ -41,6 +41,7 @@ int32_t MainWindowUi::setupUi()
         connect(mActionExit, SIGNAL(triggered(bool)), this, SIGNAL(quit()));
         mActionAbout = new QAction(mMainWindow);
         mActionAbout->setObjectName(QStringLiteral("actionAbout"));
+        connect(mActionAbout, SIGNAL(triggered(bool)), this, SIGNAL(about()));
     }
 
     if (SUCCEED(rc)) {

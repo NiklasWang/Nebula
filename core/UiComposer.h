@@ -45,6 +45,7 @@ signals:
     int32_t updateUi(DeviceUi *ui, DeviceUiType type, bool result);
     void showDebug(DeviceUi *ui, QString text);
     void quit();
+    void about();
 
 private slots:
     int32_t onDrawUi(std::function<int32_t ()> func);

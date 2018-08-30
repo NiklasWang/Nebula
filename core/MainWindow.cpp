@@ -14,6 +14,7 @@ MainWindow::MainWindow(QApplication *app, QWidget *parent) :
     mApp(app),
     mParent(parent),
     mUi(nullptr),
+    mAbout(nullptr),
     mMonitor(nullptr)
 {
     gMW = this;
@@ -46,7 +47,8 @@ int32_t MainWindow::construct()
         if (ISNULL(mUi)) {
             showError("Failed to create ui composer.");
         } else {
-            connect(mUi, SIGNAL(quit()), this, SLOT(close()));
+            connect(mUi, SIGNAL(quit()),  this, SLOT(close()));
+            connect(mUi, SIGNAL(about()), this, SLOT(showAbout()));
         }
     }
 
@@ -154,6 +156,43 @@ QString MainWindow::getPath()
     }
 
     return result;
+}
+
+int32_t MainWindow::showAbout()
+{
+    int32_t rc = NO_ERROR;
+
+    if (SUCCEED(rc)) {
+        mAbout = new AboutDialog();
+        if (ISNULL(mAbout)) {
+            showError("Failed to create about dialog");
+            rc = NO_MEMORY;
+        } else {
+            connect(mAbout, SIGNAL(destroyed(QObject*)),
+                    this,   SLOT(closeAbout()));
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        rc = mAbout->setup();
+        if (!SUCCEED(rc)) {
+            showError("Failed to setup about dialog");
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        mAbout->show();
+    }
+
+    return rc;
+}
+
+void MainWindow::closeAbout()
+{
+    if (NOTNULL(mAbout)) {
+        mAbout->deleteLater();
+        mAbout = nullptr;
+    }
 }
 
 }

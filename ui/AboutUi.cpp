@@ -1,3 +1,5 @@
+#include <QObject>
+
 #include "utils/common.h"
 #include "ui/uilayout.h"
 #include "ui/AboutUi.h"
@@ -57,6 +59,16 @@ int32_t AboutUi::setupUi()
         mPictureLabel = new QLabel(mGridLayoutWidget);
         mPictureLabel->setObjectName(QStringLiteral("mPictureLabel"));
         mPictureLabel->setMinimumSize(QSize(125, 200));
+
+        QMatrix rotation;
+        rotation.rotate(90);
+        QImage Image;
+        Image.load(":/icon/IconColor_16x10");
+        QPixmap pixmap = QPixmap::fromImage(Image);
+        pixmap.transformed(rotation, Qt::SmoothTransformation);
+        QPixmap fitPixmap = pixmap.scaled(mPictureLabel->width(),
+            mPictureLabel->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        mPictureLabel->setPixmap(fitPixmap);
         mGridLayout->addWidget(mPictureLabel, 0, 1, 5, 1);
     }
 
@@ -106,6 +118,9 @@ int32_t AboutUi::setupUi()
         font.setFamily(QStringLiteral("Calibri"));
         font.setPointSize(11);
         mContactLabel->setFont(font);
+        mContactLabel->setFrameShape(QFrame::Box);
+        mContactLabel->setStyleSheet("border-width: 1px; "
+            "border-style: solid; border-color: blue;");
         mGridLayout->addWidget(mContactLabel, 3, 3, 1, 1);
     }
 
@@ -164,8 +179,8 @@ int32_t AboutUi::setupUi()
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(mOkButton->sizePolicy().hasHeightForWidth());
-        mOkButton->setSizePolicy(sizePolicy1);
-        mOkButton->setMinimumSize(QSize(80, 20));
+        mOkButton->setSizePolicy(sizePolicy);
+        mOkButton->setMinimumSize(QSize(80, 30));
         QFont font;
         font.setFamily(QStringLiteral("Courier"));
         font.setPointSize(13);
@@ -177,18 +192,20 @@ int32_t AboutUi::setupUi()
 
     if (SUCCEED(rc)) {
         rc = retranslateUi();
+        mGridLayoutWidget->show();
         QMetaObject::connectSlotsByName(mDialog);
+
+        QObject::connect(mOkButton, SIGNAL(clicked(bool)),
+                         mDialog,   SLOT(close()));
     }
 
     return rc;
 }
 
-void AboutUi::retranslateUi()
+int32_t AboutUi::retranslateUi()
 {
     mDialog->setWindowTitle(QApplication::translate("mDialog",
         "About Nebula", nullptr));
-    mPictureLabel->setText(QApplication::translate("mDialog",
-        "Pic", nullptr));
     mTitleLabel->setText(QApplication::translate("mDialog",
         "Nebula", nullptr));
     mVersionLabel->setText(QApplication::translate("mDialog",
