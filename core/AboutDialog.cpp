@@ -13,6 +13,8 @@ int32_t AboutDialog::setup()
         if (ISNULL(mUi)) {
             showError("Failed to create about ui");
             rc = NO_MEMORY;
+        } else {
+            setAttribute(Qt::WA_DeleteOnClose);
         }
     }
 

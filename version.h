@@ -2,7 +2,7 @@
 #define __VERSION_H_
 
 #define PROJNAME "Nebula"
-#define VERSION " v0.1.2"
+#define VERSION " v0.2.1"
 
 #endif
 

@@ -1,5 +1,6 @@
 #include <QObject>
 
+#include "version.h"
 #include "utils/common.h"
 #include "ui/uilayout.h"
 #include "ui/AboutUi.h"
@@ -204,12 +205,16 @@ int32_t AboutUi::setupUi()
 
 int32_t AboutUi::retranslateUi()
 {
+    QString proj = PROJNAME;
+    QString title = "About " + proj;
     mDialog->setWindowTitle(QApplication::translate("mDialog",
-        "About Nebula", nullptr));
+        title.toLocal8Bit().data(), nullptr));
     mTitleLabel->setText(QApplication::translate("mDialog",
-        "Nebula", nullptr));
+        proj.toLocal8Bit().data(), nullptr));
+    QString ver = VERSION;
+    QString version = "Version " + ver + " - 32bit";
     mVersionLabel->setText(QApplication::translate("mDialog",
-        "Version 0.1.2 - 32bit", nullptr));
+        version.toLocal8Bit().data(), nullptr));
     mCopyrightLabel->setText(QApplication::translate("mDialog",
         "Copyright (C) 2018\n"
         "by Wang Liang\n"
