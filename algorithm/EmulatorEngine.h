@@ -15,6 +15,7 @@ public:
     int32_t deinit() override;
     int32_t process() override;
     int32_t set(void *parm) override;
+    QString query() override;
 
 public:
     EmulatorEngine(QString path);

@@ -76,6 +76,7 @@ HEADERS += \
     algorithm/VerificationEngine.h \
     algorithm/Config.h \
     algorithm/AlgorithmHelper.h \
+    algorithm/DeviceConfig.h \
     remote/RemoteControl.h \
     remote/config.h \
     core/MainWindow.h \

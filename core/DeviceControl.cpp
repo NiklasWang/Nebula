@@ -81,13 +81,16 @@ int32_t DeviceControl::doTask()
 
     if (SUCCEED(rc)) {
         result = mAlg->process();
-        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_3, result);
+        rc = mUi->updateUiResult(mName,
+            DEVICE_UI_TYPE_3, SUCCEED(result));
         if (!SUCCEED(rc)) {
             showError("Failed to update ui, 3");
         }
         if (!SUCCEED(result)) {
+            mDebug->debug(mName, mAlg->query());
             mDebug->debug(mName, "Run calibration FAILED.");
         } else {
+            mDebug->debug(mName, mAlg->query());
             mDebug->debug(mName, "Run calibration succeed.");
         }
     }
@@ -100,15 +103,16 @@ int32_t DeviceControl::doTask()
         SECURE_DELETE(mAlg);
     }
 
-    if (SUCCEED(rc) && SUCCEED(result)) {
-        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_4, result);
+    if (SUCCEED(rc) || !SUCCEED(rc)) {
+        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_4, true);
         if (!SUCCEED(rc)) {
             showError("Failed to update ui, 4");
         }
     }
 
     if (SUCCEED(rc) || !SUCCEED(rc)) {
-        rc = mUi->updateUiResult(mName, DEVICE_UI_TYPE_RESULT, result);
+        rc = mUi->updateUiResult(mName,
+            DEVICE_UI_TYPE_RESULT, SUCCEED(result));
         if (!SUCCEED(rc)) {
             showError("Failed to update ui, result");
         }

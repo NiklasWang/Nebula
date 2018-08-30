@@ -1,5 +1,6 @@
 #include "utils/common.h"
 #include "core/Common.h"
+#include "algorithm/DeviceConfig.h"
 #include "algorithm/AlgorithmHelper.h"
 #include "algorithm/VerificationEngine.h"
 #include "external/inc/arcsoft_verification.h"
@@ -12,6 +13,7 @@ int32_t VerificationEngine::process()
     ASVLOFFSCREEN vleftoffscreen;
     ASVLOFFSCREEN vrightoffscreen;
     ArcStereoImageData imagedata;
+    double avg, max, range;
 
     if (SUCCEED(rc)) {
         int32_t w = getAlignedStride(mParm.main.w, mParm.main.stride);
@@ -61,19 +63,51 @@ int32_t VerificationEngine::process()
             &imagedata, mParm.otp, errs,
             mParm.name.toLocal8Bit().data());
         if (!SUCCEED(rc)) {
-            qDebug() << "Device " << mParm.name
-                     << " verification failed, " << rc
-                     << " details ["
-                     << errs[0] << " / "
-                     << errs[1] << " / "
-                     << errs[2] << "].";
+            showError(QString("Run algorithm failed") + rc);
         } else {
-            qDebug() << "Device " << mParm.name
-                     << " verification succeed.";
+            avg = errs[0];
+            max = errs[1];
+            range = errs[2];
+            mLastResult.clear();
+            mLastResult.append("Result: ");
+            mLastResult.append("Avg ");
+            mLastResult.append(QString("%1").arg(avg));
+            mLastResult.append(", Max ");
+            mLastResult.append(QString("%1").arg(max));
+            mLastResult.append(", Range ");
+            mLastResult.append(QString("%1").arg(range));
         }
     }
 
+    if (SUCCEED(rc)) {
+        if (avg < PRODUCT_T_AVG1 &&
+            max < PRODUCT_T_MAX1) {
+            rc = NO_ERROR;
+        } else if (avg < PRODUCT_T_AVG2 &&
+            max < PRODUCT_T_MAX2 &&
+            range < PRODUCT_T_RANGE) {
+            rc = NO_ERROR;
+        } else {
+            rc = TEST_FAILED;
+        }
+    }
+
+    if (SUCCEED(rc)) {
+        qDebug() << "Device " << mParm.name
+                 << " verification succeed.";
+        qDebug() << mLastResult;
+    } else {
+        qDebug() << "Device " << mParm.name
+                 << " verification FAILED.";
+        qDebug() << mLastResult;
+    }
+
     return rc;
+}
+
+QString VerificationEngine::query()
+{
+    return mLastResult;
 }
 
 int32_t VerificationEngine::init()

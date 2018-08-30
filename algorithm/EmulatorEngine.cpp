@@ -32,6 +32,11 @@ int32_t EmulatorEngine::process()
     return NO_ERROR;
 }
 
+QString EmulatorEngine::query()
+{
+    return "emulator query test";
+}
+
 int32_t EmulatorEngine::set(void * /*parm*/)
 {
     return NO_ERROR;

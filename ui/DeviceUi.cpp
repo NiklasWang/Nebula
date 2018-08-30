@@ -397,7 +397,7 @@ int32_t DeviceUi::update(DeviceUiType type, bool result)
                 mResult->setStyleSheet("background-color:red; color:white;");
             }
         }
-        RETURNIGNORE(rc, JUMP_DONE);
+        rc = RETURNIGNORE(rc, JUMP_DONE);
     }
 
     return rc;
@@ -409,7 +409,12 @@ int32_t DeviceUi::kPictureOpacityRange[] = {
 };
 
 int32_t DeviceUi::kTextOpacityRange[] = {
-    100, 95, 90, 85, 80, 80, 85, 90, 95, 100
+    100, 99, 98, 97, 96, 95, 93, 93, 92, 91,
+     90, 89, 88, 87, 86, 85, 84, 83, 82, 81,
+     80, 79, 78, 77, 76, 75, 74, 73, 72, 71,
+     71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+     81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+     91, 92, 93, 94, 95, 96, 97, 98, 99, 100
 };
 
 int32_t DeviceUi::drawAnimation(int32_t frameId)

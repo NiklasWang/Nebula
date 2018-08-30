@@ -231,7 +231,7 @@ int32_t Algorithm::process()
     if (NOTNULL(mAlg)) {
         rc = mAlg->process();
         if (!SUCCEED(rc)) {
-            showError("Failed to process algorithm.");
+            qDebug() << "Failed to process algorithm.";
         }
     }
 
@@ -241,6 +241,17 @@ int32_t Algorithm::process()
 int32_t Algorithm::set(void * /*parm*/)
 {
     return NOT_REQUIRED;
+}
+
+QString Algorithm::query()
+{
+    QString result = "";
+
+    if (NOTNULL(mAlg)) {
+        result = mAlg->query();
+    }
+
+    return result;
 }
 
 #else
@@ -296,6 +307,17 @@ int32_t Algorithm::process()
 int32_t Algorithm::set(void * /*parm*/)
 {
     return NOT_REQUIRED;
+}
+
+QString Algorithm::query()
+{
+    QString result = "";
+
+    if (NOTNULL(mAlg)) {
+        result = mAlg->query();
+    }
+
+    return result;
 }
 
 #endif

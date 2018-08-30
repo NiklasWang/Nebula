@@ -37,6 +37,7 @@ public:
     int32_t deinit() override;
     int32_t process() override;
     int32_t set(void *parm) override;
+    QString query() override;
 
 public:
     VerificationEngine();
@@ -45,6 +46,7 @@ public:
 private:
     ParmType mParm;
     void    *mEngine;
+    QString  mLastResult;
 };
 
 }
