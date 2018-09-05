@@ -51,17 +51,24 @@ int32_t DeviceControl::doTask()
 
     if (SUCCEED(rc)) {
         sem.wait();
-        rc = mCtl->exitController();
-        int32_t _rc = mUi->updateUiResult(
-            mName, DEVICE_UI_TYPE_2, SUCCEED(rc));
-        if (!SUCCEED(_rc)) {
+        QString errs;
+        rc = mCtl->exitController(errs);
+        if (!SUCCEED(rc)) {
             mDebug->debug(mName, "Remote control FAILED.");
-            showError("Failed to update ui, 2");
-            rc |= _rc;
+            mDebug->debug(mName, "Reason: " + errs);
         } else {
             mDebug->debug(mName, "Remote control succeed.");
         }
         SECURE_DELETE(mCtl);
+    }
+
+    if (SUCCEED(rc) || !SUCCEED(rc)) {
+        int32_t _rc = mUi->updateUiResult(
+            mName, DEVICE_UI_TYPE_2, SUCCEED(rc));
+        if (!SUCCEED(_rc)) {
+            showError("Failed to update ui, 2");
+            rc |= _rc;
+        }
     }
 
     if (SUCCEED(rc)) {

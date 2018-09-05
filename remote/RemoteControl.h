@@ -15,7 +15,7 @@ class RemoteControl :
 {
 public:
     int32_t startController();
-    int32_t exitController();
+    int32_t exitController(QString &errIfAny);
     int32_t setCb(std::function<int32_t ()> func);
 
 public:
@@ -34,6 +34,7 @@ private:
     QString   mPath;
     QString   mName;
     bool      mResult;
+    QString   mErrIfAny;
     std::function<int32_t ()> mCbFunc;
 };
 

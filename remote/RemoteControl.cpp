@@ -51,6 +51,7 @@ void RemoteControl::run()
             QString curLine = *(lines.end() - i - 1);
             if (curLine.contains(SCRIPT_LAST_LINE_SUCCEED_MARK,
                 Qt::CaseInsensitive)) {
+                mErrIfAny = "Failed to control device by script.";
                 mResult = true;
                 break;
             }
@@ -60,7 +61,8 @@ void RemoteControl::run()
     if (SUCCEED(rc)) {
         rc = checkRules();
         if (!SUCCEED(rc)) {
-            showError("Failed to check rules on remote device");
+            mResult = false;
+            mErrIfAny = "Failed to check rules, files number mismatch.";
         }
     }
 
@@ -133,12 +135,13 @@ int32_t RemoteControl::startController()
     return rc;
 }
 
-int32_t RemoteControl::exitController()
+int32_t RemoteControl::exitController(QString &errIfAny)
 {
     int32_t rc = NO_ERROR;
 
     mExit = true;
     mExitSem.wait();
+    errIfAny = mErrIfAny;
 
     if (!mResult) {
         rc = TEST_FAILED;
@@ -164,7 +167,8 @@ RemoteControl::RemoteControl(QString path, QString name) :
 RemoteControl::~RemoteControl()
 {
     if (isRunning()) {
-        int32_t rc = exitController();
+        QString errs;
+        int32_t rc = exitController(errs);
         if (!SUCCEED(rc)) {
             showError("Failed to exit device controller.");
         }

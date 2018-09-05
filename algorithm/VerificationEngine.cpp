@@ -67,7 +67,6 @@ int32_t VerificationEngine::process()
             mLastResult.append(QString::number(rc, 16));
             mLastResult.append("\n");
             mLastResult.append("Please check testing environment.");
-            showError(mLastResult);
         } else {
             avg = errs[0];
             max = errs[1];
