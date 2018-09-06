@@ -14,7 +14,6 @@ namespace nebula {
 void RemoteControl::run()
 {
     int32_t rc = NO_ERROR;
-    QProcess *process;
 
     if (SUCCEED(rc)) {
         QDir path(SCRIPT_PATH);
@@ -27,10 +26,12 @@ void RemoteControl::run()
     }
 
     if (SUCCEED(rc)) {
-        process = new QProcess();
-        if (ISNULL(process)) {
-            showError("Failed to create process.");
-            rc = NO_MEMORY;
+        if (ISNULL(mProcess)) {
+            mProcess = new QProcess();
+            if (ISNULL(mProcess)) {
+                showError("Failed to create mProcess.");
+                rc = NO_MEMORY;
+            }
         }
     }
 
@@ -38,13 +39,13 @@ void RemoteControl::run()
         QString script = SCRIPT_PATH;
         QStringList args;
         args << mName << "2" << mPath;
-        process->start(script, args);
+        mProcess->start(script, args);
     }
 
     if (SUCCEED(rc)) {
-        process->waitForReadyRead();
-        process->waitForFinished();
-        QString result = process->readAll();
+        mProcess->waitForReadyRead();
+        mProcess->waitForFinished();
+        QString result = mProcess->readAll();
         QStringList lines = result.split("\r\n");
         for (int32_t i = 0; i < SCRIPT_LINE_COUNT_FOR_MARK &&
              i < lines.size(); i++) {
@@ -63,6 +64,13 @@ void RemoteControl::run()
         if (!SUCCEED(rc)) {
             mResult = false;
             mErrIfAny = "Failed to check rules, files number mismatch.";
+        }
+    }
+
+    if (SUCCEED(rc) || !SUCCEED(rc)) {
+        if (NOTNULL(mProcess)) {
+            mProcess->close();
+            SECURE_DELETE(mProcess);
         }
     }
 
@@ -92,9 +100,6 @@ int32_t RemoteControl::checkRules()
         dir.setSorting(QDir::Size | QDir::Reversed);
 
         list = dir.entryInfoList();
-        if (list.size() != DIR_FILE_NUM + DIR_DEFAULT_NUM) {
-            rc = TEST_FAILED;
-        }
     }
 
     if (SUCCEED(rc)) {
@@ -115,7 +120,7 @@ int32_t RemoteControl::checkRules()
 
     if (SUCCEED(rc)) {
         if (count != DIR_FILE_NUM) {
-            rc  = TEST_FAILED;
+            rc = TEST_FAILED;
         }
     }
 
@@ -143,6 +148,11 @@ int32_t RemoteControl::exitController(QString &errIfAny)
     mExitSem.wait();
     errIfAny = mErrIfAny;
 
+    if (NOTNULL(mProcess)) {
+        mProcess->close();
+        SECURE_DELETE(mProcess);
+    }
+
     if (!mResult) {
         rc = TEST_FAILED;
     }
@@ -160,7 +170,8 @@ RemoteControl::RemoteControl(QString path, QString name) :
     mExit(false),
     mPath(path),
     mName(name),
-    mResult(false)
+    mResult(false),
+    mProcess(nullptr)
 {
 }
 

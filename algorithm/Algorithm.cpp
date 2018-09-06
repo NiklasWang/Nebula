@@ -17,6 +17,9 @@ Algorithm::Algorithm(QString path, QString name) :
     mName(name),
     mAlg(nullptr)
 {
+    for (int32_t i = 0; i < FILE_TYPE_MAX_INVALID; i++) {
+        mFiles[i] = nullptr;
+    }
 }
 
 Algorithm::~Algorithm()
@@ -53,11 +56,6 @@ int32_t Algorithm::init()
                       QDir::NoSymLinks | QDir::AllDirs);
         dir.setSorting(QDir::Size | QDir::Reversed);
         list = dir.entryInfoList();
-
-        if (list.size() != DIR_FILE_NUM + DIR_DEFAULT_NUM) {
-            showError("Invalid file number in " + mPath);
-            rc = PARAM_INVALID;
-        }
     }
 
     if (SUCCEED(rc)) {
@@ -108,6 +106,15 @@ int32_t Algorithm::init()
             if (!SUCCEED(rc)) {
                 break;
             }
+        }
+    }
+
+    if (SUCCEED(rc)){
+        if (ISNULL(mFiles[FILE_TYPE_OTP]) ||
+            ISNULL(mFiles[FILE_TYPE_MAIN]) ||
+            ISNULL(mFiles[FILE_TYPE_SUB])) {
+            showError("Some files not found");
+            rc = PARAM_INVALID;
         }
     }
 

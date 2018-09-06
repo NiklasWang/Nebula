@@ -5,6 +5,7 @@
 
 #include <QString>
 #include <QThread>
+#include <QProcess>
 
 #include "utils/Semaphore.h"
 
@@ -35,6 +36,7 @@ private:
     QString   mName;
     bool      mResult;
     QString   mErrIfAny;
+    QProcess *mProcess;
     std::function<int32_t ()> mCbFunc;
 };
 

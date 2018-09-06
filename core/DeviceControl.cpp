@@ -80,7 +80,7 @@ int32_t DeviceControl::doTask()
     }
 
     if (SUCCEED(rc)) {
-        int32_t rc = mAlg->init();
+        rc = mAlg->init();
         if (!SUCCEED(rc)) {
             mDebug->debug(mName, "Rules checking FAILED.");
         }
