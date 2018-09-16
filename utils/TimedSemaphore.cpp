@@ -1,5 +1,5 @@
-#include "utils/common.h"
-#include "utils/TimedSemaphore.h"
+#include "common.h"
+#include "TimedSemaphore.h"
 
 namespace nebula {
 

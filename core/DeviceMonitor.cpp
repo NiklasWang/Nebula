@@ -1,7 +1,7 @@
 #include <QProcess>
 
 #include "utils/common.h"
-#include "utils/Time.h"
+#include "utils/Times.h"
 #include "core/Common.h"
 #include "core/CmdPrefix.h"
 #include "core/MainWindow.h"

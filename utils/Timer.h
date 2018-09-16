@@ -5,9 +5,9 @@
 #include <QThread>
 #include <QString>
 
-#include "utils/Time.h"
-#include "utils/Semaphore.h"
-#include "utils/TimedSemaphore.h"
+#include "Times.h"
+#include "Semaphore.h"
+#include "TimedSemaphore.h"
 
 namespace nebula {
 

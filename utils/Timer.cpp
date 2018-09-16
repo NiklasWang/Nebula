@@ -1,10 +1,10 @@
 #include <QDateTime>
 #include <QDebug>
 
-#include "core/Common.h"
-#include "utils/common.h"
-#include "utils/Time.h"
-#include "utils/Timer.h"
+#include "../core/Common.h"
+#include "common.h"
+#include "Times.h"
+#include "Timer.h"
 
 #define DEBUG_MODE_ON 0
 
@@ -32,7 +32,7 @@ int32_t Timer::startNow(Ms ms, std::function<int32_t ()> func)
 
     if (SUCCEED(rc)) {
         if (ms() <= 0) {
-            showError("Invalid ms" + ms());
+            qDebug() << "Invalid ms" << ms();
             rc = PARAM_INVALID;
         }
     }
@@ -52,7 +52,7 @@ int32_t Timer::startNow(Ms ms, std::function<int32_t ()> func)
         if (ISNULL(mTimedSem)) {
             mTimedSem = new TimedSemaphore(ms());
             if (ISNULL(mTimedSem)) {
-                showError("Failed to create semaphore timed.");
+                qDebug() << "Failed to create semaphore timed.";
                 rc = NO_MEMORY;
             }
         }

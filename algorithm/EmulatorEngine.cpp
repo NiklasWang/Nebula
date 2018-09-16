@@ -2,7 +2,7 @@
 #include <QTime>
 
 #include "utils/common.h"
-#include "utils/Time.h"
+#include "utils/Times.h"
 #include "algorithm/EmulatorEngine.h"
 
 #define EMULATOR_DELAY_TIME_BASE_MS 3000

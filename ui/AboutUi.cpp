@@ -1,6 +1,6 @@
 #include <QObject>
 
-#include "version.h"
+#include "utils/version.h"
 #include "utils/common.h"
 #include "ui/uilayout.h"
 #include "ui/AboutUi.h"

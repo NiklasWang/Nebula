@@ -6,9 +6,12 @@
 
 
 adb -s %1 root
+ping -n 1 127.0.1>nul
+adb -s %1 wait-for-device
 adb -s %1 remount
 
 :: start app
+adb -s %1 shell rm -rf /storage/emulated/0/DCIM/yuv
 adb -s %1 shell am start -n com.zui.camera.yuvtest/com.zui.camera.yuvtest.CameraActivity
 
 :: 

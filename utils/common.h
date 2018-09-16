@@ -33,12 +33,11 @@ enum err_raeson {
 
 #define SUCCEED(rc)      ((rc) == NO_ERROR)
 #define ISNULL(ptr)      ((ptr) == NULL)
-#define FAILED(rc)       (!SUCCEED(rc))
 #define NOTNULL(ptr)     (!ISNULL(ptr))
 #define POSITIVE_NUM(num) ((num) > 0)
 #define NEGITIVE_NUM(num) ((num) < 0)
 #define ISZERO(num)       ((num) == 0)
-#define ARRAYSIZE(array) (sizeof(array) / sizeof(array[0]))
+#define SIZEOFARRARY(array) (sizeof(array) / sizeof(array[0]))
 #define INVALIDNUM       (-1)
 #define EQUALPTR(a, b)   ((a) == (b))
 #define MAX(a, b)        ((a) > (b) ? (a) : (b))
