@@ -46,6 +46,11 @@ win32:CONFIG(release, debug|release):                 \
         -L$$OUT_PWD/../remote/release/    -lremote    \
         -L$$OUT_PWD/../algorithm/release/ -lalgorithm \
         -L$$OUT_PWD/../utils/release/     -lutils     \
+        -L$$OUT_PWD/../core/release/      -lcore      \
+        -L$$OUT_PWD/../algorithm/release/ -lalgorithm \
+        -L$$OUT_PWD/../remote/release/    -lremote    \
+        -L$$OUT_PWD/../ui/release/        -lui        \
+        -L$$OUT_PWD/../utils/release/     -lutils     \
 
 else:win32:CONFIG(debug, debug|release): \
     LIBS +=                                           \
@@ -66,6 +71,11 @@ else:unix:                                            \
         -L$$OUT_PWD/../core/      -lcore              \
         -L$$OUT_PWD/../remote/    -lremote            \
         -L$$OUT_PWD/../algorithm/ -lalgorithm         \
+        -L$$OUT_PWD/../utils/     -lutils             \
+        -L$$OUT_PWD/../core/      -lcore              \
+        -L$$OUT_PWD/../algorithm/ -lalgorithm         \
+        -L$$OUT_PWD/../remote/    -lremote            \
+        -L$$OUT_PWD/../ui/        -lui                \
         -L$$OUT_PWD/../utils/     -lutils             \
 
 INCLUDEPATH +=         \
